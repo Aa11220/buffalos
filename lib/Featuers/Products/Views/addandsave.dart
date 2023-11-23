@@ -1,5 +1,5 @@
 import 'package:buffalos/Featuers/Products/widget/notesandingrediant.dart';
-import 'package:buffalos/utility/drawer.dart';
+import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,9 @@ class addandsave extends StatefulWidget {
 class _addandsaveState extends State<addandsave> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController Maincategory = TextEditingController();
+  TextEditingController subcategory = TextEditingController();
   TextEditingController PerapareAre = TextEditingController();
+
   SuggestionsBoxController mainbox = SuggestionsBoxController();
   SuggestionsBoxController subbox = SuggestionsBoxController();
   SuggestionsBoxController prebbox = SuggestionsBoxController();
@@ -45,6 +47,7 @@ class _addandsaveState extends State<addandsave> {
               padding: EdgeInsets.all(12),
               child: SingleChildScrollView(
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -132,7 +135,7 @@ class _addandsaveState extends State<addandsave> {
                                     fillColor: Colors.white,
                                     suffixIcon:
                                         Icon(Icons.keyboard_double_arrow_down)),
-                                controller: null,
+                                controller: subcategory,
                               ),
                               suggestionsBoxDecoration:
                                   SuggestionsBoxDecoration(),
@@ -141,6 +144,7 @@ class _addandsaveState extends State<addandsave> {
                                 return ListTile(title: Text(itemData!));
                               },
                               onSuggestionSelected: (suggestion) {
+                                subcategory.text = suggestion!;
                                 print(suggestion);
                               },
                             ),
@@ -148,7 +152,10 @@ class _addandsaveState extends State<addandsave> {
                           CircleAvatar(
                             backgroundColor: Color(0xFF90391E),
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _showdialolgmainsubcategory(context,
+                                    subcategory, Maincategory, subcategory);
+                              },
                               icon: Icon(Icons.add),
                               color: Colors.white,
                             ),
@@ -316,6 +323,91 @@ Future<void> _showdialolgmain(
         content: TextFormField(
           controller: controller,
           decoration: InputDecoration(hintText: "Enter Main Category"),
+        ),
+        actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Disable'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Enable'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _showdialolgmainsubcategory(
+    BuildContext context,
+    TextEditingController controller,
+    TextEditingController main,
+    TextEditingController secondcontroller) {
+  return showAdaptiveDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(
+          "Add sub category",
+          style: TextStyle(color: Color(0xFF90391E)),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("main category"),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .4,
+                child: TypeAheadField<String?>(
+                  hideOnEmpty: true,
+                  hideSuggestionsOnKeyboardHide: true,
+                  suggestionsBoxVerticalOffset: 0,
+                  textFieldConfiguration: TextFieldConfiguration(
+                    decoration: InputDecoration(
+                        hintText: "Select..",
+                        filled: true,
+                        fillColor: Colors.white,
+                        suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
+                    controller: main,
+                  ),
+                  suggestionsBoxDecoration: SuggestionsBoxDecoration(),
+                  suggestionsCallback: ClassName.getsuggest,
+                  itemBuilder: (context, String? itemData) {
+                    return ListTile(title: Text(itemData!));
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    main.text = suggestion!;
+                    print(suggestion);
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("sub category"),
+              SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: secondcontroller,
+              ),
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(

@@ -1,3 +1,4 @@
+import 'package:buffalos/Featuers/Products/Views/addnote.dart';
 import 'package:buffalos/Featuers/Products/Views/productspage.dart';
 import 'package:buffalos/Featuers/login/views/loginPage.dart';
 import 'package:buffalos/test.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'Featuers/Products/Views/addandsave.dart';
+import 'Featuers/Products/Views/addingred.dart';
 
 void main() {
   runApp(ProviderScope(
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF78823)),
         useMaterial3: true,
       ),
-      home: addandsave(),
+      home: addIngredient(),
       routes: {
         '/test': (context) => const done(),
       },

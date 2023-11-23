@@ -1,4 +1,4 @@
-import 'package:buffalos/utility/drawer.dart';
+import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
 
 import 'package:flutter/material.dart';
