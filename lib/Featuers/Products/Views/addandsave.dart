@@ -315,7 +315,7 @@ Future<void> _showdialolgmain(
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
+      return AlertDialog.adaptive(
         title: Text(
           "$titletext",
           style: TextStyle(color: Color(0xFF90391E)),
@@ -357,7 +357,7 @@ Future<void> _showdialolgmainsubcategory(
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
+      return AlertDialog.adaptive(
         title: Text(
           "Add sub category",
           style: TextStyle(color: Color(0xFF90391E)),
