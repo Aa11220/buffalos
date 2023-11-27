@@ -1,19 +1,28 @@
+import 'package:buffalos/Featuers/Products/Controller/itemscontroller.dart';
+import 'package:buffalos/Featuers/Products/Views/addandsave.dart';
+import 'package:buffalos/apis/categoriesapi.dart';
+import 'package:buffalos/apis/itemsapi.dart';
+import 'package:buffalos/apis/userapi.dart';
+import 'package:buffalos/models/Category.dart';
+import 'package:buffalos/models/item.dart';
 import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../../../utility/dummy.dart';
-
-class productPage extends StatefulWidget {
+class productPage extends ConsumerStatefulWidget {
   productPage({super.key});
+  static const path = "/product";
 
   @override
-  State<productPage> createState() => _productPageState();
+  ConsumerState<productPage> createState() => _productPageState();
 }
 
-class _productPageState extends State<productPage> {
+class _productPageState extends ConsumerState<productPage> {
+  var isloading = false;
+  final _formKey = GlobalKey<FormState>();
   TextEditingController category = TextEditingController();
   TextEditingController items = TextEditingController();
   SuggestionsBoxController enditcategory = SuggestionsBoxController();
@@ -22,8 +31,24 @@ class _productPageState extends State<productPage> {
   void dispose() {
     category.dispose();
     items.dispose();
-
     super.dispose();
+  }
+
+  String _Categorykey = "";
+  String _itemkey = "";
+  void onsave() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        isloading = true;
+      });
+
+      ref.read(Itemcontrollerprovider).getItem(_itemkey, context);
+
+      setState(() {
+        isloading = false;
+      });
+    }
   }
 
   @override
@@ -43,141 +68,191 @@ class _productPageState extends State<productPage> {
             appBar: AppBar(title: Text("Products"), actions: [
               Image.asset("assets/img/image005.png"),
             ]),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(
-                  20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Category",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF90391E)),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    SizedBox(
-                      width: 250,
-                      height: 50,
-                      child: TypeAheadField<String?>(
-                        suggestionsBoxController: enditcategory,
-                        hideOnEmpty: true,
-                        hideSuggestionsOnKeyboardHide: true,
-                        suggestionsBoxVerticalOffset: 0,
-                        textFieldConfiguration: TextFieldConfiguration(
-                          decoration: InputDecoration(
-                              hintText: "Select..",
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon:
-                                  Icon(Icons.keyboard_double_arrow_down)),
-                          controller: category,
+            body: isloading == true
+                ? Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  )
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        20,
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Category",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF90391E)),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              width: 250,
+                              height: 50,
+                              child: TypeAheadFormField<Category?>(
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return "Please Select";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                onSaved: (newValue) {},
+                                suggestionsBoxController: enditcategory,
+                                suggestionsBoxVerticalOffset: 0,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  decoration: InputDecoration(
+                                      hintText: "Select..",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: Icon(
+                                          Icons.keyboard_double_arrow_down)),
+                                  controller: category,
+                                ),
+                                suggestionsBoxDecoration:
+                                    SuggestionsBoxDecoration(),
+                                suggestionsCallback: (A) async {
+                                  final mylist = await ref
+                                      .watch(CategoriesApiprovider)
+                                      .fetchCategories();
+                                  return mylist.where((element) {
+                                    return element.categoryName
+                                        .toLowerCase()
+                                        .contains(A.toLowerCase());
+                                  });
+                                },
+                                itemBuilder: (context, Category? itemData) {
+                                  return ListTile(
+                                      title: Text(itemData!.categoryName));
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  category.text = suggestion!.categoryName;
+                                  _Categorykey =
+                                      suggestion.pkCategory.toString();
+                                  print(suggestion);
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Items",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF90391E)),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              width: 250,
+                              height: 50,
+                              child: TypeAheadFormField<item?>(
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return "Please Select";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                onSaved: (newValue) {},
+                                suggestionsBoxController: endititems,
+                                suggestionsBoxVerticalOffset: 0,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  decoration: InputDecoration(
+                                      hintText: "Select..",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: Icon(
+                                          Icons.keyboard_double_arrow_down)),
+                                  controller: items,
+                                ),
+                                suggestionsBoxDecoration:
+                                    SuggestionsBoxDecoration(),
+                                suggestionsCallback: (A) async {
+                                  final mylist = await ref
+                                      .watch(Itemcontrollerprovider)
+                                      .getItems(_Categorykey);
+                                  return mylist.where((element) {
+                                    return element.itemName!
+                                        .toLowerCase()
+                                        .contains(A.toLowerCase());
+                                  });
+                                },
+                                itemBuilder: (context, item? itemData) {
+                                  return ListTile(
+                                      title: Text(itemData!.itemName!));
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  items.text = suggestion!.itemName!;
+                                  _itemkey = suggestion.pkItemId!.toString();
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Center(
+                              child: Container(
+                                width: 150,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Color(0xFF90391E),
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    onsave();
+                                  },
+                                  child: Center(
+                                      child: Text(
+                                    "Search item",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Container(
+                                margin: EdgeInsets.all(20),
+                                width: 150,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Color(0xFF90391E),
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .pushNamed(addandsave.path, arguments: {
+                                      "Search": false,
+                                    });
+                                  },
+                                  child: Center(
+                                      child: Text(
+                                    "Add new item",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        suggestionsBoxDecoration: SuggestionsBoxDecoration(),
-                        suggestionsCallback: ClassName.getsuggest,
-                        itemBuilder: (context, String? itemData) {
-                          return ListTile(title: Text(itemData!));
-                        },
-                        onSuggestionSelected: (suggestion) {
-                          category.text = suggestion!;
-                          print(suggestion);
-                        },
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Items",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF90391E)),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    SizedBox(
-                      width: 250,
-                      height: 50,
-                      child: TypeAheadField<String?>(
-                        suggestionsBoxController: endititems,
-                        hideOnEmpty: true,
-                        hideSuggestionsOnKeyboardHide: true,
-                        suggestionsBoxVerticalOffset: 0,
-                        textFieldConfiguration: TextFieldConfiguration(
-                          decoration: InputDecoration(
-                              hintText: "Select..",
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon:
-                                  Icon(Icons.keyboard_double_arrow_down)),
-                          controller: items,
-                        ),
-                        suggestionsBoxDecoration: SuggestionsBoxDecoration(),
-                        suggestionsCallback: ClassName.getsuggest,
-                        itemBuilder: (context, String? itemData) {
-                          return ListTile(title: Text(itemData!));
-                        },
-                        onSuggestionSelected: (suggestion) {
-                          category.text = suggestion!;
-                          print(suggestion);
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Center(
-                      child: Container(
-                        width: 150,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFF90391E),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("object");
-                          },
-                          child: Center(
-                              child: Text(
-                            "Search item",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.all(20),
-                        width: 150,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFF90391E),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("object");
-                          },
-                          child: Center(
-                              child: Text(
-                            "Save item",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:buffalos/Featuers/Products/Views/productspage.dart';
 import 'package:buffalos/apis/userapi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,6 @@ class loginController {
     logedin.fold(
         (l) => ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(l.message))),
-        (r) => Navigator.of(context).popAndPushNamed("/test"));
+        (r) => Navigator.of(context).popAndPushNamed(productPage.path));
   }
 }

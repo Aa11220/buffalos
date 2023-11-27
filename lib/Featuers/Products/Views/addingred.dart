@@ -8,6 +8,7 @@ import '../../../utility/lineargragr.dart';
 
 class addIngredient extends StatefulWidget {
   const addIngredient({super.key});
+  static const path = "/addingred";
 
   @override
   State<addIngredient> createState() => _addIngredientState();
@@ -125,7 +126,7 @@ Row Fristrow(BuildContext context) {
               hideOnEmpty: true,
               hideSuggestionsOnKeyboardHide: true,
               suggestionsBoxVerticalOffset: 0,
-              textFieldConfiguration: TextFieldConfiguration(
+              textFieldConfiguration: const TextFieldConfiguration(
                 decoration: InputDecoration(
                     hintText: "Select..",
                     filled: true,

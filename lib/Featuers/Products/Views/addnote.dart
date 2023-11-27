@@ -7,6 +7,7 @@ import '../../../utility/lineargragr.dart';
 
 class addnote extends StatefulWidget {
   const addnote({super.key});
+  static const path = "/addnote";
 
   @override
   State<addnote> createState() => _addnoteState();

@@ -14,6 +14,7 @@ final authprovider = ChangeNotifierProvider<userApi>((ref) {
 });
 
 class userApi extends ChangeNotifier {
+  bool loading = false;
   user logedin = user(
       token: "", userName: "", emp_ProfilePic: "", fkSafeId: 0, pkEmpId: 0);
   set setName(user name) {
@@ -24,6 +25,7 @@ class userApi extends ChangeNotifier {
   futuerorfaluer<user> signin(String User, String password) async {
     final url = Uri.http(baseUrl, "/Login");
     try {
+     
       final response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"username": User, "password": password}));
@@ -42,7 +44,7 @@ class userApi extends ChangeNotifier {
         );
       }
     } catch (e, StackTrace) {
-      return left(Faliuer(message: e.toString(), stacktrace: StackTrace));
+      return left(Faliuer(message: "Error happened", stacktrace: StackTrace));
     }
   }
 }

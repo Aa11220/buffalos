@@ -32,8 +32,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF78823)),
         useMaterial3: true,
       ),
-      home: addIngredient(),
+      home: loginPage(),
       routes: {
+        addIngredient.path: (context) => addIngredient(),
+        addnote.path: (context) => addnote(),
+        productPage.path: (context) => productPage(),
+        addandsave.path: (context) => addandsave(),
         '/test': (context) => const done(),
       },
     );

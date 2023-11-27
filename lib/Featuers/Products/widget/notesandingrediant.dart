@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Noteandingredient extends StatefulWidget {
-  const Noteandingredient({super.key, required this.title});
+  const Noteandingredient({super.key, required this.title, required this.page});
   final String title;
+  final String page;
   @override
   State<Noteandingredient> createState() => _NoteandingredientState();
 }
@@ -14,7 +15,9 @@ class _NoteandingredientState extends State<Noteandingredient> {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(widget.page);
+          },
           child: Text(
             widget.title,
             style: TextStyle(color: Colors.white),

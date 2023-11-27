@@ -1,25 +1,75 @@
+import 'package:buffalos/Featuers/Products/Controller/kitchencontroller.dart';
 import 'package:buffalos/Featuers/Products/widget/notesandingrediant.dart';
+import 'package:buffalos/apis/kitchensapi.dart';
+import 'package:buffalos/models/item.dart';
+import 'package:buffalos/models/kitchen.dart';
 import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:io';
 
+import 'addnote.dart';
+import 'addingred.dart';
 import '../../../utility/dummy.dart';
 
-class addandsave extends StatefulWidget {
+class addandsave extends ConsumerStatefulWidget {
   const addandsave({super.key});
-
+  static const path = "addandsaveproducts";
   @override
-  State<addandsave> createState() => _addandsaveState();
+  ConsumerState<addandsave> createState() => _addandsaveState();
 }
 
-class _addandsaveState extends State<addandsave> {
+class _addandsaveState extends ConsumerState<addandsave> {
+  late final arrg;
+  late final itemdata;
+  String? link;
+  bool frist = true;
+  void onsave() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+
+    if (frist) {
+      arrg = ModalRoute.of(context)!.settings.arguments as Map;
+
+      if (arrg['Search']) {
+        itemdata = arrg["item"] as Map;
+        fristname = TextEditingController(text: itemdata!["itemName"]);
+        secondname = TextEditingController(text: itemdata!["itemNameLang2"]);
+        link = itemdata!["itemImage"];
+        Maincategory = TextEditingController();
+        subcategory = TextEditingController();
+        PerapareAre =
+            TextEditingController(text: itemdata!["fkPrepareId"].toString());
+        price = TextEditingController(text: itemdata!["price"].toString());
+      } else {
+        fristname = TextEditingController();
+        secondname = TextEditingController();
+        Maincategory = TextEditingController();
+        subcategory = TextEditingController();
+        PerapareAre = TextEditingController();
+        price = TextEditingController();
+      }
+      frist = false;
+    }
+    super.didChangeDependencies();
+  }
+
   final _formKey = GlobalKey<FormState>();
-  TextEditingController Maincategory = TextEditingController();
-  TextEditingController subcategory = TextEditingController();
-  TextEditingController PerapareAre = TextEditingController();
+  late TextEditingController fristname;
+  late TextEditingController secondname;
+  late TextEditingController Maincategory;
+  late TextEditingController subcategory;
+  late TextEditingController PerapareAre;
+  late TextEditingController price;
 
   SuggestionsBoxController mainbox = SuggestionsBoxController();
   SuggestionsBoxController subbox = SuggestionsBoxController();
@@ -28,6 +78,7 @@ class _addandsaveState extends State<addandsave> {
   double spaces = 5;
   @override
   Widget build(BuildContext context) {
+    bool showCate = arrg["Search"];
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(gradient: linear),
@@ -58,6 +109,16 @@ class _addandsaveState extends State<addandsave> {
                       TextFormField(
                         decoration: InputDecoration(
                             hintText: "Enter Item frist language name "),
+                        controller: fristname,
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.trim().isEmpty) {
+                            return "Please enter Item frist language name";
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       SizedBox(
                         height: spaces,
@@ -69,99 +130,129 @@ class _addandsaveState extends State<addandsave> {
                         height: spaces,
                       ),
                       TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Enter Item Second language name"),
-                      ),
+                          decoration: InputDecoration(
+                              hintText: "Enter Item Second language name"),
+                          controller: secondname,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim().isEmpty) {
+                              return "Please enter Item Second language name";
+                            } else {
+                              return null;
+                            }
+                          }),
                       SizedBox(
                         height: spaces,
                       ),
-                      Text(
-                        "Main category",
-                      ),
-                      SizedBox(
-                        height: spaces,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .3,
-                            child: TypeAheadField<String?>(
-                              suggestionsBoxController: mainbox,
-                              hideOnEmpty: true,
-                              hideSuggestionsOnKeyboardHide: true,
-                              suggestionsBoxVerticalOffset: 0,
-                              textFieldConfiguration: TextFieldConfiguration(
-                                decoration: InputDecoration(
-                                    hintText: "Select..",
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon:
-                                        Icon(Icons.keyboard_double_arrow_down)),
-                                controller: Maincategory,
+                      if (!showCate)
+                        Text(
+                          "Main category",
+                        ),
+                      if (!showCate)
+                        SizedBox(
+                          height: spaces,
+                        ),
+                      if (!showCate)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .3,
+                              child: TypeAheadFormField<String?>(
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return "Please enter main category";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                suggestionsBoxController: mainbox,
+                                hideOnEmpty: true,
+                                hideSuggestionsOnKeyboardHide: true,
+                                suggestionsBoxVerticalOffset: 0,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  decoration: InputDecoration(
+                                      hintText: "Select..",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: Icon(
+                                          Icons.keyboard_double_arrow_down)),
+                                  controller: Maincategory,
+                                ),
+                                suggestionsBoxDecoration:
+                                    SuggestionsBoxDecoration(),
+                                suggestionsCallback: ClassName.getsuggest,
+                                itemBuilder: (context, String? itemData) {
+                                  return ListTile(title: Text(itemData!));
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  Maincategory.text = suggestion!;
+                                  print(suggestion);
+                                },
                               ),
-                              suggestionsBoxDecoration:
-                                  SuggestionsBoxDecoration(),
-                              suggestionsCallback: ClassName.getsuggest,
-                              itemBuilder: (context, String? itemData) {
-                                return ListTile(title: Text(itemData!));
-                              },
-                              onSuggestionSelected: (suggestion) {
-                                Maincategory.text = suggestion!;
-                                print(suggestion);
-                              },
                             ),
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Color(0xFF90391E),
-                            child: IconButton(
-                              onPressed: () => _showdialolgmain(
-                                  context, Maincategory, "Main category"),
-                              icon: Icon(Icons.add),
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .3,
-                            child: TypeAheadField<String?>(
-                              suggestionsBoxController: subbox,
-                              hideOnEmpty: true,
-                              hideSuggestionsOnKeyboardHide: true,
-                              suggestionsBoxVerticalOffset: 0,
-                              textFieldConfiguration: TextFieldConfiguration(
-                                decoration: InputDecoration(
-                                    hintText: "Select..",
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon:
-                                        Icon(Icons.keyboard_double_arrow_down)),
-                                controller: subcategory,
+                            CircleAvatar(
+                              backgroundColor: Color(0xFF90391E),
+                              child: IconButton(
+                                onPressed: () => _showdialolgmain(
+                                    context, Maincategory, "Main category"),
+                                icon: Icon(Icons.add),
+                                color: Colors.white,
                               ),
-                              suggestionsBoxDecoration:
-                                  SuggestionsBoxDecoration(),
-                              suggestionsCallback: ClassName.getsuggest,
-                              itemBuilder: (context, String? itemData) {
-                                return ListTile(title: Text(itemData!));
-                              },
-                              onSuggestionSelected: (suggestion) {
-                                subcategory.text = suggestion!;
-                                print(suggestion);
-                              },
                             ),
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Color(0xFF90391E),
-                            child: IconButton(
-                              onPressed: () {
-                                _showdialolgmainsubcategory(context,
-                                    subcategory, Maincategory, subcategory);
-                              },
-                              icon: Icon(Icons.add),
-                              color: Colors.white,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .3,
+                              child: TypeAheadFormField<String?>(
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return "Please enter Subcategory";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                suggestionsBoxController: subbox,
+                                hideOnEmpty: true,
+                                hideSuggestionsOnKeyboardHide: true,
+                                suggestionsBoxVerticalOffset: 0,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  decoration: InputDecoration(
+                                      hintText: "Select..",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: Icon(
+                                          Icons.keyboard_double_arrow_down)),
+                                  controller: subcategory,
+                                ),
+                                suggestionsBoxDecoration:
+                                    SuggestionsBoxDecoration(),
+                                suggestionsCallback: ClassName.getsuggest,
+                                itemBuilder: (context, String? itemData) {
+                                  return ListTile(title: Text(itemData!));
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  subcategory.text = suggestion!;
+                                  print(suggestion);
+                                },
+                              ),
                             ),
-                          )
-                        ],
-                      ),
+                            CircleAvatar(
+                              backgroundColor: Color(0xFF90391E),
+                              child: IconButton(
+                                onPressed: () {
+                                  _showdialolgmainsubcategory(context,
+                                      subcategory, Maincategory, subcategory);
+                                },
+                                icon: Icon(Icons.add),
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
                       SizedBox(
                         height: spaces,
                       ),
@@ -173,7 +264,16 @@ class _addandsaveState extends State<addandsave> {
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width * .3,
-                            child: TypeAheadField<String?>(
+                            child: TypeAheadFormField<kitchen?>(
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.trim().isEmpty) {
+                                  return "Please enter area";
+                                } else {
+                                  return null;
+                                }
+                              },
                               suggestionsBoxController: prebbox,
                               hideOnEmpty: true,
                               hideSuggestionsOnKeyboardHide: true,
@@ -189,12 +289,18 @@ class _addandsaveState extends State<addandsave> {
                               ),
                               suggestionsBoxDecoration:
                                   SuggestionsBoxDecoration(),
-                              suggestionsCallback: ClassName.getsuggest,
-                              itemBuilder: (context, String? itemData) {
-                                return ListTile(title: Text(itemData!));
+                              suggestionsCallback: (A) async {
+                                final mylist = await ref
+                                    .watch(Kitchencontrollerprovider)
+                                    .getItems();
+                                return mylist;
+                              },
+                              itemBuilder: (context, kitchen? itemData) {
+                                return ListTile(
+                                    title: Text(itemData!.areaName));
                               },
                               onSuggestionSelected: (suggestion) {
-                                PerapareAre.text = suggestion!;
+                                PerapareAre.text = suggestion!.areaName;
                                 print(suggestion);
                               },
                             ),
@@ -224,41 +330,60 @@ class _addandsaveState extends State<addandsave> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.35,
-                              child: TextFormField(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            child: TextFormField(
                                 decoration: InputDecoration(
                                     hintText: "Enter price...."),
-                              )),
-                          ElevatedButton(
-                            onPressed: () {
-                              pickfile();
-                            },
-                            style: ButtonStyle(
-                                splashFactory: NoSplash.splashFactory,
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        const Color(0xFFFFFFFF)),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        8.0), // radius you want
-                                  ),
-                                )),
-                            child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                  Text(
-                                    'Attatch File',
-                                    style: TextStyle(color: Color(0xFF923D22)),
-                                  ),
-                                  Icon(
-                                    Icons.attachment,
-                                    color: Color(0xFF923D22),
-                                    size: 24.0,
-                                  ),
-                                ]),
+                                controller: price,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty) {
+                                    return "Please enter price";
+                                  } else {
+                                    return null;
+                                  }
+                                }),
                           ),
+                          link != null
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width * .5,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 1)),
+                                  child: Text(link!),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    pickfile();
+                                  },
+                                  style: ButtonStyle(
+                                      splashFactory: NoSplash.splashFactory,
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              const Color(0xFFFFFFFF)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              8.0), // radius you want
+                                        ),
+                                      )),
+                                  child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: const [
+                                        Text(
+                                          'Attatch File',
+                                          style: TextStyle(
+                                              color: Color(0xFF923D22)),
+                                        ),
+                                        Icon(
+                                          Icons.attachment,
+                                          color: Color(0xFF923D22),
+                                          size: 24.0,
+                                        ),
+                                      ]),
+                                ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * .01,
                           )
@@ -270,8 +395,11 @@ class _addandsaveState extends State<addandsave> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Noteandingredient(title: "Add Note"),
-                          Noteandingredient(title: "Add Ingrediants")
+                          Noteandingredient(
+                              title: "Add Note", page: addnote.path),
+                          Noteandingredient(
+                              title: "Add Ingrediants",
+                              page: addIngredient.path)
                         ],
                       ),
                       SizedBox(
@@ -279,7 +407,9 @@ class _addandsaveState extends State<addandsave> {
                       ),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            onsave();
+                          },
                           child: Text(
                             "Save",
                             style: TextStyle(color: Colors.white),
@@ -373,7 +503,7 @@ Future<void> _showdialolgmainsubcategory(
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .4,
-                child: TypeAheadField<String?>(
+                child: TypeAheadFormField<String?>(
                   hideOnEmpty: true,
                   hideSuggestionsOnKeyboardHide: true,
                   suggestionsBoxVerticalOffset: 0,
