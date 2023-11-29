@@ -1,4 +1,5 @@
 import 'package:buffalos/apis/itemsapi.dart';
+import 'package:buffalos/apis/kitchensapi.dart';
 import 'package:buffalos/models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,13 +7,15 @@ import '../Views/addandsave.dart';
 
 final Itemcontrollerprovider = Provider((ref) {
   final itemapi = ref.watch(itemapiProvider);
-  return Itemcontroller(itemsapi: itemapi);
+  final kitchapi = ref.watch(kitchenapiProvider);
+  return Itemcontroller(itemsapi: itemapi, kitapi: kitchapi);
 });
 
 class Itemcontroller {
   final Itemsapi itemsapi;
+  final kitchenapi kitapi;
 
-  Itemcontroller({required this.itemsapi});
+  Itemcontroller({required this.itemsapi, required this.kitapi});
   Future<List<item>> getItems(String catid) async {
     if (catid == "") {
       return [];
@@ -22,11 +25,15 @@ class Itemcontroller {
     }
   }
 
-  void getItem(String itemid, BuildContext context) async {
+  Future<void> getItem(String itemid, BuildContext context) async {
     try {
       final result = await itemsapi.fetchitem(itemid);
-      Navigator.of(context).pushNamed(addandsave.path,
-          arguments: {"Search": true, "item": result.toMap()});
+      final kitch = await kitapi.fetchitem(result.fkPrepareId.toString());
+      Navigator.of(context).pushNamed(addandsave.path, arguments: {
+        "Search": true,
+        "item": result.toMap(),
+        "Kitchen": kitch.areaName
+      });
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Error happended")));

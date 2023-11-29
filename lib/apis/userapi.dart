@@ -25,7 +25,6 @@ class userApi extends ChangeNotifier {
   futuerorfaluer<user> signin(String User, String password) async {
     final url = Uri.http(baseUrl, "/Login");
     try {
-     
       final response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"username": User, "password": password}));

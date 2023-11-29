@@ -1,16 +1,18 @@
 import 'package:buffalos/Featuers/Products/Controller/itemscontroller.dart';
 import 'package:buffalos/Featuers/Products/Views/addandsave.dart';
 import 'package:buffalos/apis/categoriesapi.dart';
-import 'package:buffalos/apis/itemsapi.dart';
-import 'package:buffalos/apis/userapi.dart';
+
 import 'package:buffalos/models/Category.dart';
 import 'package:buffalos/models/item.dart';
+import 'package:buffalos/utility/Common%20funcation/disconnceted.dart';
 import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+
+import '../../../providers/noteprovider.dart';
 
 class productPage extends ConsumerStatefulWidget {
   productPage({super.key});
@@ -43,7 +45,7 @@ class _productPageState extends ConsumerState<productPage> {
         isloading = true;
       });
 
-      ref.read(Itemcontrollerprovider).getItem(_itemkey, context);
+      await ref.read(Itemcontrollerprovider).getItem(_itemkey, context);
 
       setState(() {
         isloading = false;
@@ -134,6 +136,7 @@ class _productPageState extends ConsumerState<productPage> {
                                       title: Text(itemData!.categoryName));
                                 },
                                 onSuggestionSelected: (suggestion) {
+                                  items.text = "";
                                   category.text = suggestion!.categoryName;
                                   _Categorykey =
                                       suggestion.pkCategory.toString();
@@ -214,7 +217,12 @@ class _productPageState extends ConsumerState<productPage> {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    onsave();
+                                    disconnected(() {
+                                      ref
+                                          .read(notelistProvider.notifier)
+                                          .deletall();
+                                      onsave();
+                                    }, context);
                                   },
                                   child: Center(
                                       child: Text(
@@ -235,10 +243,17 @@ class _productPageState extends ConsumerState<productPage> {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed(addandsave.path, arguments: {
-                                      "Search": false,
-                                    });
+                                    disconnected(() {
+                                      ref
+                                          .read(notelistProvider.notifier)
+                                          .deletall();
+                                      print('connected');
+                                      Navigator.of(context).pushNamed(
+                                          addandsave.path,
+                                          arguments: {
+                                            "Search": false,
+                                          });
+                                    }, context);
                                   },
                                   child: Center(
                                       child: Text(

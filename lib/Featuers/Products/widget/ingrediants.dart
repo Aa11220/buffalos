@@ -1,12 +1,14 @@
 import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
+import 'package:buffalos/Featuers/Products/Views/addingred.dart';
+import 'package:buffalos/Featuers/Products/Views/addnote.dart';
 
 import 'package:buffalos/models/Note.dart';
 import 'package:buffalos/providers/noteprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Noteandingredient extends ConsumerStatefulWidget {
-  const Noteandingredient(
+class igrediants extends ConsumerStatefulWidget {
+  const igrediants(
       {super.key,
       required this.title,
       required this.page,
@@ -16,22 +18,27 @@ class Noteandingredient extends ConsumerStatefulWidget {
   final String itemid;
 
   @override
-  ConsumerState<Noteandingredient> createState() => _NoteandingredientState();
+  ConsumerState<igrediants> createState() => _NoteandingredientState();
 }
 
 late List<Note> _text;
 late List<Note> _hold;
 
-class _NoteandingredientState extends ConsumerState<Noteandingredient> {
+class _NoteandingredientState extends ConsumerState<igrediants> {
   @override
   void getlistfromapi() async {
-    print("object");
-    _hold = await ref.read(NoteControerProvider).getAll(widget.itemid);
-    ref.read(notelistProvider.notifier).addnotelist(_hold);
+    setState(() {
+      _text = [];
+      _hold = [];
+    });
+
+    // // ref.watch(notelistProvider.notifier).deletall();
+    // print("object");
+    // _hold = await ref.read(NoteControerProvider).getAll(widget.itemid);
     // ref.read(notelistProvider.notifier).addnotelist(_hold);
     // _text = ref.read(notelistProvider.notifier).getall();
     // print(_text);
-    setState(() {});
+    // setState(() {});
   }
 
   @override
@@ -46,14 +53,13 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        _text = ref.watch(notelistProvider.notifier).getall();
-        ref.watch(notelistProvider);
         return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamed(widget.page, arguments: widget.itemid);
+                    .pushNamed(addIngredient.path, arguments: widget.itemid);
               },
               child: Text(
                 widget.title,
@@ -71,7 +77,7 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                 ),
               ),
             ),
-            for (Note i in /* ref.watch(notelistProvider) */ _text)
+            for (Note i in [])
               Container(
                   margin: EdgeInsets.all(2),
                   padding: EdgeInsets.all(10),

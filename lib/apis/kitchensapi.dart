@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:buffalos/apis/userapi.dart';
-import 'package:buffalos/models/item.dart';
 import 'package:buffalos/models/kitchen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +19,8 @@ class kitchenapi {
 
   Future<List<kitchen>> fetchitems() async {
     List<kitchen> itemlist = [];
-    final url = Uri.http(baseUrl, "/TblPreparArea/getPage", {"pageSize": "2000"});
+    final url =
+        Uri.http(baseUrl, "/TblPreparArea/getPage", {"pageSize": "2000"});
     try {
       final response = await http.get(
         url,
@@ -42,9 +42,9 @@ class kitchenapi {
     }
   }
 
-  Future<item> fetchitem(String itemid) async {
-    final url = Uri.http(baseUrl, "TblItem/getPage",
-        {"pageSize": "2000", "userQuery": "pkItemId=$itemid"});
+  Future<kitchen> fetchitem(String itemid) async {
+    final url = Uri.http(baseUrl, "/TblPreparArea/getPage",
+        {"pageSize": "2000", "userQuery": "pkPrepareId=$itemid"});
     try {
       final response = await http.get(
         url,
@@ -56,9 +56,28 @@ class kitchenapi {
       final body = jsonDecode(response.body);
       final list = body["rs"]["data"][0];
 
-      final result = item.fromMap(list);
+      final result = kitchen.fromMap(list);
 
       return result;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<int> addkitch(String name) async {
+    final url = Uri.http(baseUrl, "/TblPreparArea/save");
+    try {
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "text/plain",
+            'Authorization': 'Bearer $tokken'
+          },
+          body: jsonEncode({"areaName": "$name"}));
+      final responsejson = jsonDecode(response.body);
+      print(responsejson);
+      final id = responsejson["rs"]["pkPrepareId"];
+      return id;
     } catch (e) {
       rethrow;
     }

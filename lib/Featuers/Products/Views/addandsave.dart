@@ -1,7 +1,7 @@
+import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
 import 'package:buffalos/Featuers/Products/Controller/kitchencontroller.dart';
 import 'package:buffalos/Featuers/Products/widget/notesandingrediant.dart';
-import 'package:buffalos/apis/kitchensapi.dart';
-import 'package:buffalos/models/item.dart';
+
 import 'package:buffalos/models/kitchen.dart';
 import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:buffalos/utility/lineargragr.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:io';
 
+import '../widget/ingrediants.dart';
 import 'addnote.dart';
 import 'addingred.dart';
 import '../../../utility/dummy.dart';
@@ -26,6 +27,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
   late final arrg;
   late final itemdata;
   String? link;
+  String iteamid = "";
   bool frist = true;
   void onsave() {
     if (_formKey.currentState!.validate()) {
@@ -47,9 +49,9 @@ class _addandsaveState extends ConsumerState<addandsave> {
         link = itemdata!["itemImage"];
         Maincategory = TextEditingController();
         subcategory = TextEditingController();
-        PerapareAre =
-            TextEditingController(text: itemdata!["fkPrepareId"].toString());
+        PerapareAre = TextEditingController(text: arrg["Kitchen"]);
         price = TextEditingController(text: itemdata!["price"].toString());
+        iteamid = itemdata!["pkItemId"].toString();
       } else {
         fristname = TextEditingController();
         secondname = TextEditingController();
@@ -74,6 +76,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
   SuggestionsBoxController mainbox = SuggestionsBoxController();
   SuggestionsBoxController subbox = SuggestionsBoxController();
   SuggestionsBoxController prebbox = SuggestionsBoxController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   double spaces = 5;
   @override
@@ -293,7 +300,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 final mylist = await ref
                                     .watch(Kitchencontrollerprovider)
                                     .getItems();
-                                return mylist;
+                                return mylist.where((element) {
+                                  return element.areaName
+                                      .toLowerCase()
+                                      .contains(A.toLowerCase());
+                                });
                               },
                               itemBuilder: (context, kitchen? itemData) {
                                 return ListTile(
@@ -394,12 +405,17 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Noteandingredient(
-                              title: "Add Note", page: addnote.path),
-                          Noteandingredient(
-                              title: "Add Ingrediants",
-                              page: addIngredient.path)
+                              title: "Add Note",
+                              page: addnote.path,
+                              itemid: iteamid),
+                          igrediants(
+                            title: "Add Ingrediants",
+                            page: addIngredient.path,
+                            itemid: iteamid,
+                          )
                         ],
                       ),
                       SizedBox(
@@ -445,35 +461,42 @@ Future<void> _showdialolgmain(
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
-      return AlertDialog.adaptive(
-        title: Text(
-          "$titletext",
-          style: TextStyle(color: Color(0xFF90391E)),
-        ),
-        content: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(hintText: "Enter Main Category"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
+      return Consumer(
+        builder: (context, ref, child) {
+          return AlertDialog.adaptive(
+            title: Text(
+              "$titletext",
+              style: TextStyle(color: Color(0xFF90391E)),
             ),
-            child: const Text('Disable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
+            content: TextFormField(
+              controller: controller,
+              decoration: InputDecoration(hintText: "Enter Main Category"),
             ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Disable'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Enable'),
+                onPressed: () async {
+                  await ref
+                      .read(Kitchencontrollerprovider)
+                      .addkitchen(controller.text);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
       );
     },
   );

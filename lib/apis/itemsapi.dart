@@ -57,6 +57,7 @@ class Itemsapi {
       final list = body["rs"]["data"][0];
 
       final result = item.fromMap(list);
+      print(result);
 
       return result;
     } catch (e) {

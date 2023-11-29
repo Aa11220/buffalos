@@ -17,14 +17,8 @@ class kitchencontroller {
     return list;
   }
 
-  // void getItem(String itemid, BuildContext context) async {
-  //   try {
-  //     final result = await itemsapi.fetchitem(itemid);
-  //     Navigator.of(context).pushNamed(addandsave.path,
-  //         arguments: {"Search": true, "item": result.toMap()});
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text("Error happended")));
-  //   }
-  // }
+  Future<int> addkitchen(String name) async {
+    final id = await kitapi.addkitch(name);
+    return id;
+  }
 }
