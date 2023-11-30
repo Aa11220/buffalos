@@ -1,5 +1,6 @@
 import 'package:buffalos/models/Note.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 
 class notelistNotifier extends Notifier<List<Note>> {
   @override
@@ -19,8 +20,12 @@ class notelistNotifier extends Notifier<List<Note>> {
     state = [];
   }
 
+  void deleteavalue(int value) {
+    state.removeWhere((element) => element.id == value);
+  }
+
   getall() {
-    return [...state];
+    return state;
   }
 }
 

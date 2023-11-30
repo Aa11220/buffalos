@@ -219,7 +219,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   onTap: () {
                                     disconnected(() {
                                       ref
-                                          .read(notelistProvider.notifier)
+                                          .watch(notelistProvider.notifier)
                                           .deletall();
                                       onsave();
                                     }, context);
@@ -245,7 +245,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   onTap: () {
                                     disconnected(() {
                                       ref
-                                          .read(notelistProvider.notifier)
+                                          .watch(notelistProvider.notifier)
                                           .deletall();
                                       print('connected');
                                       Navigator.of(context).pushNamed(

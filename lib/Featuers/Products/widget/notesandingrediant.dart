@@ -29,7 +29,7 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
     _hold = await ref.read(NoteControerProvider).getAll(widget.itemid);
     ref.read(notelistProvider.notifier).addnotelist(_hold);
     // ref.read(notelistProvider.notifier).addnotelist(_hold);
-    // _text = ref.read(notelistProvider.notifier).getall();
+
     // print(_text);
     setState(() {});
   }
@@ -46,14 +46,16 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        _text = ref.watch(notelistProvider.notifier).getall();
-        ref.watch(notelistProvider);
+        _text = ref.watch(notelistProvider);
         return Column(
           children: [
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamed(widget.page, arguments: widget.itemid);
+                    .pushNamed(widget.page, arguments: widget.itemid)
+                    .then((value) {
+                  setState(() {});
+                });
               },
               child: Text(
                 widget.title,
@@ -71,7 +73,7 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                 ),
               ),
             ),
-            for (Note i in /* ref.watch(notelistProvider) */ _text)
+            for (Note i in /*ref.watch(notelistProvider)*/ _text)
               Container(
                   margin: EdgeInsets.all(2),
                   padding: EdgeInsets.all(10),
