@@ -1,5 +1,4 @@
-import 'package:buffalos/apis/categoriesapi.dart';
-import 'package:buffalos/models/Category.dart';
+import '../../../apis/categoriesapi.dart';
 
 class catcoontroller {
   final CategoriesApi categoriesapi;

@@ -1,12 +1,14 @@
-import 'package:buffalos/Featuers/Products/Controller/itemscontroller.dart';
-import 'package:buffalos/Featuers/Products/Views/addandsave.dart';
-import 'package:buffalos/apis/categoriesapi.dart';
+import 'package:buffalos/providers/igrediantsprovider.dart';
 
-import 'package:buffalos/models/Category.dart';
-import 'package:buffalos/models/item.dart';
-import 'package:buffalos/utility/Common%20funcation/disconnceted.dart';
-import 'package:buffalos/utility/commonwidget/drawer.dart';
-import 'package:buffalos/utility/lineargragr.dart';
+import '../Controller/itemscontroller.dart';
+import 'addandsave.dart';
+import '../../../apis/categoriesapi.dart';
+
+import '../../../models/Category.dart';
+import '../../../models/item.dart';
+import '../../../utility/Common%20funcation/disconnceted.dart';
+import '../../../utility/commonwidget/drawer.dart';
+import '../../../utility/lineargragr.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +17,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../providers/noteprovider.dart';
 
 class productPage extends ConsumerStatefulWidget {
-  productPage({super.key});
+  const productPage({super.key});
   static const path = "/product";
 
   @override
@@ -67,16 +69,16 @@ class _productPageState extends ConsumerState<productPage> {
           },
           child: Scaffold(
             drawer: MyDrawer(context),
-            appBar: AppBar(title: Text("Products"), actions: [
+            appBar: AppBar(title: const Text("Products"), actions: [
               Image.asset("assets/img/image005.png"),
             ]),
             body: isloading == true
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator.adaptive(),
                   )
                 : SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.all(
+                      padding: const EdgeInsets.all(
                         20,
                       ),
                       child: Form(
@@ -84,14 +86,14 @@ class _productPageState extends ConsumerState<productPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Category",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF90391E)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             SizedBox(
@@ -111,7 +113,7 @@ class _productPageState extends ConsumerState<productPage> {
                                 suggestionsBoxController: enditcategory,
                                 suggestionsBoxVerticalOffset: 0,
                                 textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Select..",
                                       filled: true,
                                       fillColor: Colors.white,
@@ -120,7 +122,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   controller: category,
                                 ),
                                 suggestionsBoxDecoration:
-                                    SuggestionsBoxDecoration(),
+                                    const SuggestionsBoxDecoration(),
                                 suggestionsCallback: (A) async {
                                   final mylist = await ref
                                       .watch(CategoriesApiprovider)
@@ -144,17 +146,17 @@ class _productPageState extends ConsumerState<productPage> {
                                 },
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Text(
+                            const Text(
                               "Items",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF90391E)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             SizedBox(
@@ -174,7 +176,7 @@ class _productPageState extends ConsumerState<productPage> {
                                 suggestionsBoxController: endititems,
                                 suggestionsBoxVerticalOffset: 0,
                                 textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Select..",
                                       filled: true,
                                       fillColor: Colors.white,
@@ -183,7 +185,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   controller: items,
                                 ),
                                 suggestionsBoxDecoration:
-                                    SuggestionsBoxDecoration(),
+                                    const SuggestionsBoxDecoration(),
                                 suggestionsCallback: (A) async {
                                   final mylist = await ref
                                       .watch(Itemcontrollerprovider)
@@ -204,7 +206,7 @@ class _productPageState extends ConsumerState<productPage> {
                                 },
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 40,
                             ),
                             Center(
@@ -213,18 +215,19 @@ class _productPageState extends ConsumerState<productPage> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  color: Color(0xFF90391E),
+                                  color: const Color(0xFF90391E),
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
                                     disconnected(() {
+                                      ref.invalidate(ingredianlistProvider);
                                       ref
                                           .watch(notelistProvider.notifier)
                                           .deletall();
                                       onsave();
                                     }, context);
                                   },
-                                  child: Center(
+                                  child: const Center(
                                       child: Text(
                                     "Search item",
                                     style: TextStyle(color: Colors.white),
@@ -234,16 +237,17 @@ class _productPageState extends ConsumerState<productPage> {
                             ),
                             Center(
                               child: Container(
-                                margin: EdgeInsets.all(20),
+                                margin: const EdgeInsets.all(20),
                                 width: 150,
                                 height: 40,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  color: Color(0xFF90391E),
+                                  color: const Color(0xFF90391E),
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
                                     disconnected(() {
+                                      ref.invalidate(ingredianlistProvider);
                                       ref
                                           .watch(notelistProvider.notifier)
                                           .deletall();
@@ -255,7 +259,7 @@ class _productPageState extends ConsumerState<productPage> {
                                           });
                                     }, context);
                                   },
-                                  child: Center(
+                                  child: const Center(
                                       child: Text(
                                     "Add new item",
                                     style: TextStyle(color: Colors.white),

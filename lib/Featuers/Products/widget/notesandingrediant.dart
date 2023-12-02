@@ -1,7 +1,7 @@
-import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
+import '../Controller/NoteController.dart';
 
-import 'package:buffalos/models/Note.dart';
-import 'package:buffalos/providers/noteprovider.dart';
+import '../../../models/Note.dart';
+import '../../../providers/noteprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,10 +57,6 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                   setState(() {});
                 });
               },
-              child: Text(
-                widget.title,
-                style: TextStyle(color: Colors.white),
-              ),
               style: ButtonStyle(
                 splashFactory: NoSplash.splashFactory,
                 backgroundColor:
@@ -72,11 +68,15 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                   ),
                 ),
               ),
+              child: Text(
+                widget.title,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
             for (Note i in /*ref.watch(notelistProvider)*/ _text)
               Container(
-                  margin: EdgeInsets.all(2),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14)),

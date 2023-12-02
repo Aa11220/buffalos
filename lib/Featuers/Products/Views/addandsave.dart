@@ -1,10 +1,9 @@
-import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
-import 'package:buffalos/Featuers/Products/Controller/kitchencontroller.dart';
-import 'package:buffalos/Featuers/Products/widget/notesandingrediant.dart';
+import '../Controller/kitchencontroller.dart';
+import '../widget/notesandingrediant.dart';
 
-import 'package:buffalos/models/kitchen.dart';
-import 'package:buffalos/utility/commonwidget/drawer.dart';
-import 'package:buffalos/utility/lineargragr.dart';
+import '../../../models/kitchen.dart';
+import '../../../utility/commonwidget/drawer.dart';
+import '../../../utility/lineargragr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,24 +96,24 @@ class _addandsaveState extends ConsumerState<addandsave> {
           },
           child: Scaffold(
             appBar: AppBar(
-              title: Text("Products"),
+              title: const Text("Products"),
               actions: [Image.asset("assets/img/image005.png")],
             ),
             drawer: MyDrawer(context),
             body: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Item frist language name"),
+                      const Text("Item frist language name"),
                       SizedBox(
                         height: spaces,
                       ),
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             hintText: "Enter Item frist language name "),
                         controller: fristname,
                         validator: (value) {
@@ -130,14 +129,14 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       SizedBox(
                         height: spaces,
                       ),
-                      Text(
+                      const Text(
                         "Item Second language name",
                       ),
                       SizedBox(
                         height: spaces,
                       ),
                       TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               hintText: "Enter Item Second language name"),
                           controller: secondname,
                           validator: (value) {
@@ -153,7 +152,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                         height: spaces,
                       ),
                       if (!showCate)
-                        Text(
+                        const Text(
                           "Main category",
                         ),
                       if (!showCate)
@@ -181,7 +180,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 hideSuggestionsOnKeyboardHide: true,
                                 suggestionsBoxVerticalOffset: 0,
                                 textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Select..",
                                       filled: true,
                                       fillColor: Colors.white,
@@ -190,7 +189,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                   controller: Maincategory,
                                 ),
                                 suggestionsBoxDecoration:
-                                    SuggestionsBoxDecoration(),
+                                    const SuggestionsBoxDecoration(),
                                 suggestionsCallback: ClassName.getsuggest,
                                 itemBuilder: (context, String? itemData) {
                                   return ListTile(title: Text(itemData!));
@@ -202,11 +201,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               ),
                             ),
                             CircleAvatar(
-                              backgroundColor: Color(0xFF90391E),
+                              backgroundColor: const Color(0xFF90391E),
                               child: IconButton(
                                 onPressed: () => _showdialolgmain(
                                     context, Maincategory, "Main category"),
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                                 color: Colors.white,
                               ),
                             ),
@@ -227,7 +226,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 hideSuggestionsOnKeyboardHide: true,
                                 suggestionsBoxVerticalOffset: 0,
                                 textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "Select..",
                                       filled: true,
                                       fillColor: Colors.white,
@@ -236,7 +235,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                   controller: subcategory,
                                 ),
                                 suggestionsBoxDecoration:
-                                    SuggestionsBoxDecoration(),
+                                    const SuggestionsBoxDecoration(),
                                 suggestionsCallback: ClassName.getsuggest,
                                 itemBuilder: (context, String? itemData) {
                                   return ListTile(title: Text(itemData!));
@@ -248,13 +247,13 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               ),
                             ),
                             CircleAvatar(
-                              backgroundColor: Color(0xFF90391E),
+                              backgroundColor: const Color(0xFF90391E),
                               child: IconButton(
                                 onPressed: () {
                                   _showdialolgmainsubcategory(context,
                                       subcategory, Maincategory, subcategory);
                                 },
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                                 color: Colors.white,
                               ),
                             )
@@ -263,7 +262,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       SizedBox(
                         height: spaces,
                       ),
-                      Text("Perapare Area"),
+                      const Text("Perapare Area"),
                       SizedBox(
                         height: spaces,
                       ),
@@ -286,7 +285,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               hideSuggestionsOnKeyboardHide: true,
                               suggestionsBoxVerticalOffset: 0,
                               textFieldConfiguration: TextFieldConfiguration(
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                     hintText: "Select..",
                                     filled: true,
                                     fillColor: Colors.white,
@@ -295,7 +294,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 controller: PerapareAre,
                               ),
                               suggestionsBoxDecoration:
-                                  SuggestionsBoxDecoration(),
+                                  const SuggestionsBoxDecoration(),
                               suggestionsCallback: (A) async {
                                 final mylist = await ref
                                     .watch(Kitchencontrollerprovider)
@@ -319,11 +318,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: CircleAvatar(
-                              backgroundColor: Color(0xFF90391E),
+                              backgroundColor: const Color(0xFF90391E),
                               child: IconButton(
                                 onPressed: () => _showdialolgmain(
                                     context, PerapareAre, "Perapare Area"),
-                                icon: Icon(Icons.add),
+                                icon: const Icon(Icons.add),
                                 color: Colors.white,
                               ),
                             ),
@@ -333,7 +332,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       SizedBox(
                         height: spaces,
                       ),
-                      Text("price"),
+                      const Text("price"),
                       SizedBox(
                         height: spaces,
                       ),
@@ -343,7 +342,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.35,
                             child: TextFormField(
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                     hintText: "Enter price...."),
                                 controller: price,
                                 validator: (value) {
@@ -380,9 +379,9 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                               8.0), // radius you want
                                         ),
                                       )),
-                                  child: Row(
+                                  child: const Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      children: const [
+                                      children: [
                                         Text(
                                           'Attatch File',
                                           style: TextStyle(
@@ -426,10 +425,6 @@ class _addandsaveState extends ConsumerState<addandsave> {
                           onPressed: () {
                             onsave();
                           },
-                          child: Text(
-                            "Save",
-                            style: TextStyle(color: Colors.white),
-                          ),
                           style: ButtonStyle(
                             splashFactory: NoSplash.splashFactory,
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -441,6 +436,10 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                     10.0), // radius you want
                               ),
                             ),
+                          ),
+                          child: const Text(
+                            "Save",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       )
@@ -465,12 +464,12 @@ Future<void> _showdialolgmain(
         builder: (context, ref, child) {
           return AlertDialog.adaptive(
             title: Text(
-              "$titletext",
-              style: TextStyle(color: Color(0xFF90391E)),
+              titletext,
+              style: const TextStyle(color: Color(0xFF90391E)),
             ),
             content: TextFormField(
               controller: controller,
-              decoration: InputDecoration(hintText: "Enter Main Category"),
+              decoration: const InputDecoration(hintText: "Enter Main Category"),
             ),
             actions: <Widget>[
               TextButton(
@@ -511,7 +510,7 @@ Future<void> _showdialolgmainsubcategory(
     context: context,
     builder: (context) {
       return AlertDialog.adaptive(
-        title: Text(
+        title: const Text(
           "Add sub category",
           style: TextStyle(color: Color(0xFF90391E)),
         ),
@@ -520,8 +519,8 @@ Future<void> _showdialolgmainsubcategory(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("main category"),
-              SizedBox(
+              const Text("main category"),
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
@@ -531,14 +530,14 @@ Future<void> _showdialolgmainsubcategory(
                   hideSuggestionsOnKeyboardHide: true,
                   suggestionsBoxVerticalOffset: 0,
                   textFieldConfiguration: TextFieldConfiguration(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: "Select..",
                         filled: true,
                         fillColor: Colors.white,
                         suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
                     controller: main,
                   ),
-                  suggestionsBoxDecoration: SuggestionsBoxDecoration(),
+                  suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
                   suggestionsCallback: ClassName.getsuggest,
                   itemBuilder: (context, String? itemData) {
                     return ListTile(title: Text(itemData!));
@@ -549,11 +548,11 @@ Future<void> _showdialolgmainsubcategory(
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("sub category"),
-              SizedBox(
+              const Text("sub category"),
+              const SizedBox(
                 height: 10,
               ),
               TextField(

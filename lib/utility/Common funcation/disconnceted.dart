@@ -13,14 +13,14 @@ void disconnected(Function todo, BuildContext context) async {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Connection Error"),
-          content: Text("You are disconnected"),
+          title: const Text("Connection Error"),
+          content: const Text("You are disconnected"),
           actions: [
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("OK"))
+                child: const Text("OK"))
           ],
         );
       },

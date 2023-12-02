@@ -1,6 +1,5 @@
-import 'package:buffalos/Featuers/login/Controller/loginController.dart';
-import 'package:buffalos/apis/userapi.dart';
-import 'package:buffalos/utility/lineargragr.dart';
+import '../Controller/loginController.dart';
+import '../../../utility/lineargragr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +35,7 @@ class _loginPageState extends ConsumerState<loginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
             Color(0xffF89321),
             Color(0xffF15A2B),
@@ -44,14 +43,14 @@ class _loginPageState extends ConsumerState<loginPage> {
         ),
         child: Scaffold(
           body: loading == true
-              ? Center(child: CircularProgressIndicator.adaptive())
+              ? const Center(child: CircularProgressIndicator.adaptive())
               : SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: .3),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           height: MediaQuery.of(context).size.height * .33,
                           child: Center(
@@ -63,7 +62,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
                           width: double.infinity,
                           height: MediaQuery.of(context).size.height * .62,
@@ -79,7 +78,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Login",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -94,7 +93,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Text("User name"),
+                                            const Text("User name"),
                                             SizedBox(
                                               height:
                                                   constraints.maxHeight * .03,
@@ -112,10 +111,10 @@ class _loginPageState extends ConsumerState<loginPage> {
                                               },
                                               decoration: InputDecoration(
                                                 hintText: "Enter your Email",
-                                                prefixIcon: Icon(Icons.lock),
+                                                prefixIcon: const Icon(Icons.lock),
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                        borderSide: BorderSide(
+                                                        borderSide: const BorderSide(
                                                             width: 1),
                                                         borderRadius:
                                                             BorderRadius
@@ -133,7 +132,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                               height:
                                                   constraints.maxHeight * .04,
                                             ),
-                                            Text("Password"),
+                                            const Text("Password"),
                                             SizedBox(
                                               height:
                                                   constraints.maxHeight * .04,
@@ -153,7 +152,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                               obscureText: _secuired,
                                               decoration: InputDecoration(
                                                 hintText: "Enter your password",
-                                                prefixIcon: Icon(Icons.lock),
+                                                prefixIcon: const Icon(Icons.lock),
                                                 suffixIcon: IconButton(
                                                   onPressed: () {
                                                     setState(() {
@@ -161,14 +160,14 @@ class _loginPageState extends ConsumerState<loginPage> {
                                                     });
                                                   },
                                                   icon: _secuired == false
-                                                      ? Icon(Icons
+                                                      ? const Icon(Icons
                                                           .remove_red_eye_outlined)
-                                                      : Icon(
+                                                      : const Icon(
                                                           Icons.remove_red_eye),
                                                 ),
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                        borderSide: BorderSide(
+                                                        borderSide: const BorderSide(
                                                             width: 1),
                                                         borderRadius:
                                                             BorderRadius
@@ -212,7 +211,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                                               .splashFactory),
                                                       onPressed: () {},
                                                       child:
-                                                          Text("Login to MQQ"),
+                                                          const Text("Login to MQQ"),
                                                     ),
                                                   ),
                                                   Container(
@@ -235,7 +234,7 @@ class _loginPageState extends ConsumerState<loginPage> {
                                                       onPressed: () {
                                                         save();
                                                       },
-                                                      child: Text(
+                                                      child: const Text(
                                                           "Login to ezdan"),
                                                     ),
                                                   ),

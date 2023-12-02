@@ -1,1 +1,1 @@
-final String baseUrl = "restaurantapifortraining.smartvillageqatar.com";
+const String baseUrl = "restaurantapifortraining.smartvillageqatar.com";

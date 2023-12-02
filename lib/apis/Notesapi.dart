@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:buffalos/apis/userapi.dart';
-import 'package:buffalos/models/Note.dart';
-import 'package:buffalos/utility/contants.dart';
+import 'userapi.dart';
+import '../models/Note.dart';
+import '../utility/contants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,7 +49,7 @@ class NoteApi {
             "Accept": "text/plain",
             'Authorization': 'Bearer $tokken'
           },
-          body: jsonEncode({"note": "$name", "fkItemId": "$itemid"}));
+          body: jsonEncode({"note": name, "fkItemId": itemid}));
       final responsejson = jsonDecode(response.body);
       print(responsejson);
       final id = responsejson["rs"]["id"];

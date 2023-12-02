@@ -1,9 +1,9 @@
-import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
+import 'package:buffalos/Featuers/Products/Controller/ingredControllrt.dart';
 import 'package:buffalos/Featuers/Products/Views/addingred.dart';
-import 'package:buffalos/Featuers/Products/Views/addnote.dart';
+import 'package:buffalos/models/ingediants.dart';
+import 'package:buffalos/providers/igrediantsprovider.dart';
 
-import 'package:buffalos/models/Note.dart';
-import 'package:buffalos/providers/noteprovider.dart';
+import '../../../models/Note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,50 +21,34 @@ class igrediants extends ConsumerStatefulWidget {
   ConsumerState<igrediants> createState() => _NoteandingredientState();
 }
 
-late List<Note> _text;
-late List<Note> _hold;
+late List<ingrediants> mylist;
 
 class _NoteandingredientState extends ConsumerState<igrediants> {
-  @override
-  void getlistfromapi() async {
-    setState(() {
-      _text = [];
-      _hold = [];
-    });
-
-    // // ref.watch(notelistProvider.notifier).deletall();
-    // print("object");
-    // _hold = await ref.read(NoteControerProvider).getAll(widget.itemid);
-    // ref.read(notelistProvider.notifier).addnotelist(_hold);
-    // _text = ref.read(notelistProvider.notifier).getall();
-    // print(_text);
-    // setState(() {});
+  void setlist() async {
+    mylist = await ref.read(ingrediantcontrollerprovider).getall(widget.itemid);
+    ref.read(ingredianlistProvider.notifier).addnotelist(mylist);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    getlistfromapi();
+    setlist();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
     return Consumer(
       builder: (context, ref, child) {
+        final alllist = ref.watch(ingredianlistProvider);
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context)
                     .pushNamed(addIngredient.path, arguments: widget.itemid);
               },
-              child: Text(
-                widget.title,
-                style: TextStyle(color: Colors.white),
-              ),
               style: ButtonStyle(
                 splashFactory: NoSplash.splashFactory,
                 backgroundColor:
@@ -76,15 +60,19 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
                   ),
                 ),
               ),
+              child: Text(
+                widget.title,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-            for (Note i in [])
+            for (ingrediants i in alllist)
               Container(
-                  margin: EdgeInsets.all(2),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14)),
-                  child: Text(i.note))
+                  child: Text(i.MaterialName))
           ],
         );
       },

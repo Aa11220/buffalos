@@ -1,5 +1,4 @@
-import 'package:buffalos/Featuers/Products/Views/addnote.dart';
-import 'package:buffalos/apis/Notesapi.dart';
+import '../../../apis/Notesapi.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/Note.dart';

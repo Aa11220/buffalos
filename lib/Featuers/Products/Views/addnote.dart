@@ -1,19 +1,13 @@
 import 'dart:math';
 
-import 'package:buffalos/Featuers/Products/Controller/NoteController.dart';
-import 'package:buffalos/models/Note.dart';
-import 'package:buffalos/providers/noteprovider.dart';
-import 'package:buffalos/utility/commonwidget/appbar.dart';
-import 'package:buffalos/utility/commonwidget/drawer.dart';
+import '../../../models/Note.dart';
+import '../../../providers/noteprovider.dart';
+import '../../../utility/commonwidget/appbar.dart';
+import '../../../utility/commonwidget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utility/lineargragr.dart';
-
-final listProvider = FutureProvider.family<List<Note>, String>((ref, id) async {
-  final list = ref.watch(NoteControerProvider).getAll(id);
-  return list;
-});
 
 class addnote extends ConsumerStatefulWidget {
   const addnote({
@@ -48,7 +42,7 @@ class _addnoteState extends ConsumerState<addnote> {
           builder: (context, ref, child) {
             return Scaffold(
                 drawer: MyDrawer(context),
-                appBar: Customappbar(text: "Notes"),
+                appBar: const Customappbar(text: "Notes"),
                 body: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +51,7 @@ class _addnoteState extends ConsumerState<addnote> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          icon: Icon(Icons.arrow_back_ios)),
+                          icon: const Icon(Icons.arrow_back_ios)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -65,13 +59,13 @@ class _addnoteState extends ConsumerState<addnote> {
                             width: MediaQuery.of(context).size.width * .8,
                             child: TextField(
                               controller: note,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: "Note",
                               ),
                             ),
                           ),
                           CircleAvatar(
-                            backgroundColor: Color(0xFF90391E),
+                            backgroundColor: const Color(0xFF90391E),
                             child: IconButton(
                               onPressed: () {
                                 ref.read(notelistProvider.notifier).addnote(
@@ -81,10 +75,11 @@ class _addnoteState extends ConsumerState<addnote> {
                                         note: note.text.isEmpty
                                             ? ""
                                             : note.text));
+
                                 note.text = "";
                                 setState(() {});
                               },
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               color: Colors.white,
                             ),
                           ),
@@ -106,7 +101,7 @@ class _addnoteState extends ConsumerState<addnote> {
                                     builder: (context, constraints) {
                                       return Container(
                                         padding: const EdgeInsets.all(12.0),
-                                        margin: EdgeInsets.all(8),
+                                        margin: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(50),
@@ -125,15 +120,15 @@ class _addnoteState extends ConsumerState<addnote> {
                                             IconButton(
                                                 onPressed: () {
                                                   ref
-                                                      .watch(notelistProvider
+                                                      .read(notelistProvider
                                                           .notifier)
                                                       .deleteavalue(ref
-                                                          .watch(notelistProvider)[
+                                                          .read(notelistProvider)[
                                                               index]
                                                           .id);
                                                   setState(() {});
                                                 },
-                                                icon: Icon(Icons.delete))
+                                                icon: const Icon(Icons.delete))
                                           ],
                                         ),
                                       );
@@ -149,10 +144,6 @@ class _addnoteState extends ConsumerState<addnote> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text(
-                            "Back",
-                            style: TextStyle(color: Colors.white),
-                          ),
                           style: ButtonStyle(
                             splashFactory: NoSplash.splashFactory,
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -164,6 +155,10 @@ class _addnoteState extends ConsumerState<addnote> {
                                     10.0), // radius you want
                               ),
                             ),
+                          ),
+                          child: const Text(
+                            "Back",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       )

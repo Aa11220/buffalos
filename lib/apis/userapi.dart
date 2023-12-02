@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:buffalos/models/user.dart';
-import 'package:buffalos/utility/Failuer.dart';
-import 'package:buffalos/utility/contants.dart';
-import 'package:buffalos/utility/type_defs.dart';
+import '../models/user.dart';
+import '../utility/Failuer.dart';
+import '../utility/contants.dart';
+import '../utility/type_defs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';

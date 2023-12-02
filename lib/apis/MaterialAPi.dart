@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../models/Material.dart';
 import 'userapi.dart';
 import '../models/kitchen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,20 +8,19 @@ import 'package:http/http.dart' as http;
 
 import '../utility/contants.dart';
 
-final kitchenapiProvider = Provider((ref) {
+final MaterialapiProvider = Provider((ref) {
   final tokken = ref.watch(authprovider).logedin.token;
-  return kitchenapi(tokken: tokken);
+  return Materialapi(tokken: tokken);
 });
 
-class kitchenapi {
+class Materialapi {
   final String tokken;
 
-  kitchenapi({required this.tokken});
+  Materialapi({required this.tokken});
 
-  Future<List<kitchen>> fetchitems() async {
-    List<kitchen> itemlist = [];
-    final url =
-        Uri.http(baseUrl, "/TblPreparArea/getPage", {"pageSize": "2000"});
+  Future<List<Material>> fetchitems() async {
+    List<Material> itemlist = [];
+    final url = Uri.http(baseUrl, "/TblMaterial/getPage", {"pageSize": "2000"});
     try {
       final response = await http.get(
         url,
@@ -33,7 +33,7 @@ class kitchenapi {
       final list = body["rs"]["data"];
       print(list);
       for (var element in list) {
-        itemlist.add(kitchen.fromMap(element));
+        itemlist.add(Material.fromMap(element));
       }
 
       return itemlist;
@@ -42,8 +42,8 @@ class kitchenapi {
     }
   }
 
-  Future<kitchen> fetchitem(String itemid) async {
-    final url = Uri.http(baseUrl, "/TblPreparArea/getPage",
+  Future<Material> fetchitem(String itemid) async {
+    final url = Uri.http(baseUrl, "/TblItem/getPage",
         {"pageSize": "2000", "userQuery": "pkPrepareId=$itemid"});
     try {
       final response = await http.get(
@@ -56,7 +56,7 @@ class kitchenapi {
       final body = jsonDecode(response.body);
       final list = body["rs"]["data"][0];
 
-      final result = kitchen.fromMap(list);
+      final result = Material.fromMap(list);
 
       return result;
     } catch (e) {
@@ -64,8 +64,8 @@ class kitchenapi {
     }
   }
 
-  Future<int> addkitch(String name) async {
-    final url = Uri.http(baseUrl, "/TblPreparArea/save");
+  Future<int> addMaterial(Material item) async {
+    final url = Uri.http(baseUrl, "/TblItem/save");
     try {
       final response = await http.post(url,
           headers: {
@@ -73,10 +73,10 @@ class kitchenapi {
             "Accept": "text/plain",
             'Authorization': 'Bearer $tokken'
           },
-          body: jsonEncode({"areaName": name}));
+          body: jsonEncode(item.toMap()));
       final responsejson = jsonDecode(response.body);
       print(responsejson);
-      final id = responsejson["rs"]["pkPrepareId"];
+      final id = 1;
       return id;
     } catch (e) {
       rethrow;

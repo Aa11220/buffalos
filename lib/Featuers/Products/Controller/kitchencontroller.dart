@@ -1,5 +1,5 @@
-import 'package:buffalos/apis/kitchensapi.dart';
-import 'package:buffalos/models/kitchen.dart';
+import '../../../apis/kitchensapi.dart';
+import '../../../models/kitchen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final Kitchencontrollerprovider = Provider((ref) {

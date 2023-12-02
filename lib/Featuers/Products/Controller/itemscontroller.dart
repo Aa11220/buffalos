@@ -1,6 +1,6 @@
-import 'package:buffalos/apis/itemsapi.dart';
-import 'package:buffalos/apis/kitchensapi.dart';
-import 'package:buffalos/models/item.dart';
+import '../../../apis/itemsapi.dart';
+import '../../../apis/kitchensapi.dart';
+import '../../../models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Views/addandsave.dart';
@@ -36,7 +36,7 @@ class Itemcontroller {
       });
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error happended")));
+          .showSnackBar(const SnackBar(content: Text("Error happended")));
     }
   }
 }

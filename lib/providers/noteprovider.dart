@@ -1,6 +1,5 @@
-import 'package:buffalos/models/Note.dart';
+import '../models/Note.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
 
 class notelistNotifier extends Notifier<List<Note>> {
   @override

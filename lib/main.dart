@@ -1,7 +1,7 @@
-import 'package:buffalos/Featuers/Products/Views/addnote.dart';
-import 'package:buffalos/Featuers/Products/Views/productspage.dart';
-import 'package:buffalos/Featuers/login/views/loginPage.dart';
-import 'package:buffalos/test.dart';
+import 'Featuers/Products/Views/addnote.dart';
+import 'Featuers/Products/Views/productspage.dart';
+import 'Featuers/login/views/loginPage.dart';
+import 'test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +9,7 @@ import 'Featuers/Products/Views/addandsave.dart';
 import 'Featuers/Products/Views/addingred.dart';
 
 void main() {
-  runApp(ProviderScope(
+  runApp(const ProviderScope(
     child: MyApp(),
   ));
 }
@@ -24,20 +24,20 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         inputDecorationTheme:
-            InputDecorationTheme(filled: true, fillColor: Colors.white),
+            const InputDecorationTheme(filled: true, fillColor: Colors.white),
         appBarTheme: const AppBarTheme(
             foregroundColor: Color(0xFF90391E),
             backgroundColor: Color(0xFFF2E2E1)),
         scaffoldBackgroundColor: Colors.transparent,
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF78823)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFF78823)),
         useMaterial3: true,
       ),
-      home: loginPage(),
+      home: const loginPage(),
       routes: {
-        addIngredient.path: (context) => addIngredient(),
-        addnote.path: (context) => addnote(),
-        productPage.path: (context) => productPage(),
-        addandsave.path: (context) => addandsave(),
+        addIngredient.path: (context) => const addIngredient(),
+        addnote.path: (context) => const addnote(),
+        productPage.path: (context) => const productPage(),
+        addandsave.path: (context) => const addandsave(),
         '/test': (context) => const done(),
         
       },
