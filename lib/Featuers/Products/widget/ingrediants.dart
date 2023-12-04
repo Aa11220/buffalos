@@ -1,7 +1,7 @@
-import 'package:buffalos/Featuers/Products/Controller/ingredControllrt.dart';
-import 'package:buffalos/Featuers/Products/Views/addingred.dart';
-import 'package:buffalos/models/ingediants.dart';
-import 'package:buffalos/providers/igrediantsprovider.dart';
+import '../Controller/ingredControllrt.dart';
+import '../Views/addingred.dart';
+import '../../../models/ingediants.dart';
+import '../../../providers/igrediantsprovider.dart';
 
 import '../../../models/Note.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +12,12 @@ class igrediants extends ConsumerStatefulWidget {
       {super.key,
       required this.title,
       required this.page,
-      required this.itemid});
+      required this.itemid,
+      required this.itemname});
   final String title;
   final String page;
   final String itemid;
+  final String itemname;
 
   @override
   ConsumerState<igrediants> createState() => _NoteandingredientState();
@@ -37,7 +39,9 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
   }
 
   @override
-  Widget build(BuildContext context,) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Consumer(
       builder: (context, ref, child) {
         final alllist = ref.watch(ingredianlistProvider);
@@ -46,8 +50,8 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context)
-                    .pushNamed(addIngredient.path, arguments: widget.itemid);
+                Navigator.of(context).pushNamed(addIngredient.path,
+                    arguments: {"id": widget.itemid, "name": widget.itemname});
               },
               style: ButtonStyle(
                 splashFactory: NoSplash.splashFactory,

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../models/Material.dart';
 import 'userapi.dart';
-import '../models/kitchen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -43,7 +42,7 @@ class Materialapi {
   }
 
   Future<Material> fetchitem(String itemid) async {
-    final url = Uri.http(baseUrl, "/TblItem/getPage",
+    final url = Uri.http(baseUrl, "/TblMaterial/getPage",
         {"pageSize": "2000", "userQuery": "pkPrepareId=$itemid"});
     try {
       final response = await http.get(
@@ -65,7 +64,7 @@ class Materialapi {
   }
 
   Future<int> addMaterial(Material item) async {
-    final url = Uri.http(baseUrl, "/TblItem/save");
+    final url = Uri.http(baseUrl, "/TblMaterial/save");
     try {
       final response = await http.post(url,
           headers: {
@@ -74,6 +73,7 @@ class Materialapi {
             'Authorization': 'Bearer $tokken'
           },
           body: jsonEncode(item.toMap()));
+      // print(jsonEncode(item.toMap()));
       final responsejson = jsonDecode(response.body);
       print(responsejson);
       final id = 1;

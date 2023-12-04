@@ -1,7 +1,8 @@
-import '../../Products/Views/productspage.dart';
-import '../../../apis/userapi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../apis/userapi.dart';
+import '../../Products/Views/productspage.dart';
 
 final loginControllerProvider = Provider((ref) {
   final Userapi = ref.watch(authprovider);

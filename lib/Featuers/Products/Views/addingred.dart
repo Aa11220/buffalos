@@ -1,12 +1,20 @@
-import 'package:buffalos/Featuers/Products/Controller/Materialcontroller.dart';
-import 'package:buffalos/Featuers/Products/Controller/UnitController.dart';
-import 'package:buffalos/models/unit.dart';
-import 'package:buffalos/providers/igrediantsprovider.dart';
+import 'dart:math';
+
+import 'package:buffalos/Featuers/Products/Controller/componentcontroller.dart';
+import 'package:buffalos/models/Componentcategory.dart';
+
+import '../../../models/maaterialtosend.dart';
+import '../../../providers/ingredtosend.dart';
+import '../Controller/Materialcontroller.dart';
+import '../Controller/UnitController.dart';
+import '../../../models/ingediants.dart';
+import '../../../models/unit.dart';
+import '../../../providers/igrediantsprovider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../providers/compingredprovider.dart';
 import '../../../utility/commonwidget/appbar.dart';
 import '../../../utility/commonwidget/drawer.dart';
-import '../../../utility/dummy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../models/Material.dart' as ma;
@@ -21,9 +29,50 @@ class addIngredient extends ConsumerStatefulWidget {
 }
 
 class _addIngredientState extends ConsumerState<addIngredient> {
+  TextEditingController material = TextEditingController();
+  TextEditingController materialqty = TextEditingController();
+  TextEditingController materialqty2 = TextEditingController();
+  TextEditingController Compomnetmaterial = TextEditingController();
+
+  TextEditingController unit = TextEditingController();
+  TextEditingController Compomnetunit = TextEditingController();
+
+  TextEditingController addunit = TextEditingController();
+
+  TextEditingController rawname = TextEditingController();
+  TextEditingController rawqunataty = TextEditingController();
+
+  TextEditingController cname = TextEditingController();
+  TextEditingController cqunataty = TextEditingController();
+
+  TextEditingController caddname = TextEditingController();
+  TextEditingController caddquant = TextEditingController();
+  TextEditingController caddunit = TextEditingController();
+  @override
+  void dispose() {
+    material.dispose();
+    materialqty.dispose();
+    materialqty2.dispose();
+    Compomnetmaterial.dispose();
+    unit.dispose();
+    Compomnetunit.dispose();
+    addunit.dispose();
+    rawname.dispose();
+    rawqunataty.dispose();
+    caddname.dispose();
+    caddquant.dispose();
+    caddunit.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(1);
     final list = ref.watch(ingredianlistProvider);
+    final itemdata = ModalRoute.of(context)!.settings.arguments as Map;
+    final itemidstring = itemdata["id"];
+    final itemid = int.tryParse(itemidstring)!;
+    final itename = itemdata["name"];
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -44,11 +93,26 @@ class _addIngredientState extends ConsumerState<addIngredient> {
                   },
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
-                Fristrow(context),
+                Fristrow(context, material, unit, addunit, rawname, rawqunataty,
+                    materialqty, itemid, itename, _formKeya, caddquant),
                 const SizedBox(
                   height: 10,
                 ),
-                Secondrow(context),
+                Secondrow(
+                    context,
+                    Compomnetmaterial,
+                    Compomnetunit,
+                    addunit,
+                    rawname,
+                    rawqunataty,
+                    materialqty2,
+                    itemid,
+                    itename,
+                    cname,
+                    cqunataty,
+                    caddname,
+                    caddquant,
+                    caddunit),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.46,
                   child: ListView.builder(
@@ -70,7 +134,8 @@ class _addIngredientState extends ConsumerState<addIngredient> {
                               children: [
                                 SizedBox(
                                   width: constraints.maxWidth * .7,
-                                  child: Text(list[index].MaterialName),
+                                  child: Text(
+                                      "${list[index].MaterialName}      qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"}"),
                                 ),
                                 IconButton(
                                     onPressed: () {
@@ -123,272 +188,478 @@ class _addIngredientState extends ConsumerState<addIngredient> {
   }
 }
 
-Consumer Fristrow(BuildContext context) {
+final _formKeya = GlobalKey<FormState>();
+final _formKeya2 = GlobalKey<FormState>();
+
+Consumer Fristrow(
+    BuildContext context,
+    TextEditingController material,
+    TextEditingController unit,
+    TextEditingController addunit,
+    TextEditingController rawname,
+    TextEditingController rawqunataty,
+    TextEditingController materialqty,
+    int id,
+    String name,
+    GlobalKey<FormState> key,
+    TextEditingController secondrow,
+    {bool isfrrow = true}) {
   return Consumer(
     builder: (context, ref, child) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              const Text("Material"),
-              const SizedBox(
-                height: 6,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .3,
-                child: TypeAheadField<ma.Material?>(
-                  // suggestionsBoxController: mainbox,
-                  hideOnEmpty: true,
-                  hideSuggestionsOnKeyboardHide: true,
-                  suggestionsBoxVerticalOffset: 0,
-                  textFieldConfiguration: const TextFieldConfiguration(
-                    decoration: InputDecoration(
-                        hintText: "Select..",
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
-                    // controller: Maincategory,
+      void _onsave() {
+        if (key.currentState!.validate()) {
+          key.currentState!.save();
+
+          if (isfrrow) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Enter item and quantaty")));
+          }
+
+          double qty = double.tryParse(materialqty.text)!;
+          final fkmaterial = Random().nextInt(100);
+          if (isfrrow == true) {
+            ref.read(ingredianlistProvider.notifier).addnote(
+                  ingrediants(
+                      FK_ItemID: id,
+                      ItemName: name,
+                      FK_MaterialID: fkmaterial,
+                      MaterialName: material.text,
+                      Qty: qty,
+                      MatType: "RAW"),
+                );
+          } else {
+            if (!_textFieldKey.currentState!.validate()) {
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(content: Text("It can not be empty")));
+            } else {
+              double amount = double.tryParse(secondrow.text)!;
+
+              ref.read(ingrediantosendlistProvider.notifier).addnote(
+                  materialtosend(
+                      fkComponent: fkmaterial,
+                      id: 0,
+                      qty: qty,
+                      mokQty: amount));
+              ref.read(ComponantProvider.notifier).addnote(ingrediants(
+                  FK_ItemID: id,
+                  ItemName: name,
+                  FK_MaterialID: fkmaterial,
+                  MaterialName: material.text,
+                  Qty: qty,
+                  MatType: "RAW"));
+            }
+          }
+        }
+      }
+
+      return Form(
+        key: key,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                const Text("Material"),
+                const SizedBox(
+                  height: 6,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: TypeAheadFormField<ma.Material?>(
+                    // suggestionsBoxController: mainbox,
+                    hideOnEmpty: true,
+                    hideSuggestionsOnKeyboardHide: true,
+                    suggestionsBoxVerticalOffset: isfrrow == true ? 0 : 0,
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration: InputDecoration(
+                          hintText: "Select..",
+                          filled: true,
+                          fillColor: Colors.white,
+                          suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
+                      controller: material,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "it can not be empty";
+                      }
+                      return null;
+                    },
+                    suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
+                    suggestionsCallback: (A) async {
+                      final mylist =
+                          await ref.read(MaterialcontrollerProvider).getall();
+                      return mylist.where((element) {
+                        return element.materialName!
+                            .toLowerCase()
+                            .contains(A.toLowerCase());
+                      });
+                    },
+                    itemBuilder: (context, ma.Material? itemData) {
+                      return ListTile(title: Text(itemData!.materialName!));
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      material.text = suggestion!.materialName!;
+
+                      print(suggestion);
+                    },
                   ),
-                  suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
-                  suggestionsCallback: (A) async {
-                    final mylist =
-                        await ref.watch(MaterialcontrollerProvider).getall();
-                    return mylist.where((element) {
-                      return element.materialName!
-                          .toLowerCase()
-                          .contains(A.toLowerCase());
-                    });
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: CircleAvatar(
+                backgroundColor: const Color(0xFF90391E),
+                child: IconButton(
+                  onPressed: () {
+                    _showdialolgmainsubcategory(
+                        context, rawname, unit, addunit, rawqunataty);
                   },
-                  itemBuilder: (context, ma.Material? itemData) {
-                    return ListTile(title: Text(itemData!.materialName!));
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    // Maincategory.text = suggestion!;
-                    print(suggestion);
-                  },
+                  icon: const Icon(Icons.add),
+                  color: Colors.white,
                 ),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32.0),
-            child: CircleAvatar(
-              backgroundColor: const Color(0xFF90391E),
+            ),
+            Column(
+              children: [
+                const Text("Quantatiy"),
+                const SizedBox(
+                  height: 6,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "it can not be empty";
+                      }
+                      return null;
+                    },
+                    controller: materialqty,
+                    decoration: InputDecoration(hintText: "Enter quantit...."),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
               child: IconButton(
                 onPressed: () {
-                  _showdialolgmainsubcategory(context, TextEditingController(),
-                      TextEditingController(), TextEditingController());
+                  _onsave();
+                  material.text = "";
+                  materialqty.text = "";
                 },
                 icon: const Icon(Icons.add),
                 color: Colors.white,
               ),
             ),
-          ),
-          Column(
-            children: [
-              const Text("Quantatiy"),
-              const SizedBox(
-                height: 6,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .3,
-                child: const TextField(
-                  decoration: InputDecoration(hintText: "Enter quantit...."),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32.0),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.add),
-              color: Colors.white,
-            ),
-          ),
-        ],
+          ],
+        ),
       );
     },
   );
 }
 
-Row Secondrow(BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      Column(
-        children: [
-          const Text("Component"),
-          const SizedBox(
-            height: 6,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .3,
-            child: TypeAheadField<String?>(
-              // suggestionsBoxController: mainbox,
-              hideOnEmpty: true,
-              hideSuggestionsOnKeyboardHide: true,
-              suggestionsBoxVerticalOffset: 0,
-              textFieldConfiguration: const TextFieldConfiguration(
-                decoration: InputDecoration(
-                    hintText: "Select..",
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
-                // controller: Maincategory,
+final _keyy = GlobalKey<FormState>();
+
+Consumer Secondrow(
+    BuildContext context,
+    TextEditingController material,
+    TextEditingController unit,
+    TextEditingController addunit,
+    TextEditingController rawname,
+    TextEditingController rawqunataty,
+    TextEditingController materialqty,
+    int id,
+    String name,
+    TextEditingController cname,
+    TextEditingController cqty,
+    TextEditingController caddname,
+    TextEditingController caddquant,
+    TextEditingController caddunit) {
+  return Consumer(
+    builder: (context, ref, child) {
+      void _onsave() {
+        if (cname.text == "" || cqty == "") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Enter item and quantaty")));
+        } else {
+          if (_keyy.currentState!.validate()) {
+            _keyy.currentState!.save();
+            double qty = double.tryParse(cqty.text)!;
+
+            ref.read(ingredianlistProvider.notifier).addnote(
+                  ingrediants(
+                      FK_ItemID: id,
+                      ItemName: name,
+                      FK_MaterialID: Random().nextInt(2000),
+                      MaterialName: cname.text,
+                      Qty: qty,
+                      MatType: "Component"),
+                );
+          }
+        }
+      }
+
+      return Form(
+        key: _keyy,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                const Text("Component"),
+                const SizedBox(
+                  height: 6,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: TypeAheadFormField<ma.Material?>(
+                    // suggestionsBoxController: mainbox,
+                    hideOnEmpty: true,
+                    hideSuggestionsOnKeyboardHide: true,
+                    suggestionsBoxVerticalOffset: 0,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Can not be Empty";
+                      }
+                      return null;
+                    },
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration: const InputDecoration(
+                          hintText: "Select..",
+                          filled: true,
+                          fillColor: Colors.white,
+                          suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
+                      controller: cname,
+                    ),
+                    suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
+                    suggestionsCallback: (A) async {
+                      final mylist = await ref
+                          .read(componentcontrollerProvider)
+                          .fetchitems();
+                      return mylist.where((element) {
+                        return element.materialName!
+                            .toLowerCase()
+                            .contains(A.toLowerCase());
+                      });
+                    },
+                    itemBuilder: (context, ma.Material? itemData) {
+                      return ListTile(title: Text(itemData!.materialName!));
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      cname.text = suggestion!.materialName!;
+                      print(suggestion);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: CircleAvatar(
+                backgroundColor: const Color(0xFF90391E),
+                child: IconButton(
+                  onPressed: () {
+                    _showaddingrediennt(
+                      context,
+                      material,
+                      unit,
+                      addunit,
+                      rawname,
+                      rawqunataty,
+                      materialqty,
+                      id,
+                      name,
+                      caddname,
+                      caddquant,
+                      caddunit,
+                    );
+                  },
+                  icon: const Icon(Icons.add),
+                  color: Colors.white,
+                ),
               ),
-              suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
-              suggestionsCallback: ClassName.getsuggest,
-              itemBuilder: (context, String? itemData) {
-                return ListTile(title: Text(itemData!));
-              },
-              onSuggestionSelected: (suggestion) {
-                // Maincategory.text = suggestion!;
-                print(suggestion);
-              },
             ),
-          ),
-        ],
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 32.0),
-        child: CircleAvatar(
-          backgroundColor: const Color(0xFF90391E),
-          child: IconButton(
-            onPressed: () {
-              _showaddingrediennt(context);
-            },
-            icon: const Icon(Icons.add),
-            color: Colors.white,
-          ),
-        ),
-      ),
-      Column(
-        children: [
-          const Text("Quantatiy"),
-          const SizedBox(
-            height: 6,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .3,
-            child: const TextField(
-              decoration: InputDecoration(hintText: "Enter quantit...."),
+            Column(
+              children: [
+                const Text("Quantatiy"),
+                const SizedBox(
+                  height: 6,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == "" || value == null || value.isEmpty) {
+                        return "can not be Empty";
+                      }
+                      return null;
+                    },
+                    controller: cqty,
+                    decoration: InputDecoration(hintText: "Enter quantit...."),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 32.0),
-        child: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.add),
-          color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: IconButton(
+                onPressed: () {
+                  _onsave();
+                  cname.text = "";
+                  cqty.text = "";
+                },
+                icon: const Icon(Icons.add),
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
-      ),
-    ],
+      );
+    },
   );
 }
 
 Future<void> _showdialolgmainsubcategory(
     BuildContext context,
     TextEditingController controller,
-    TextEditingController main,
-    TextEditingController secondcontroller) {
+    TextEditingController secondcontroller,
+    TextEditingController addunit,
+    TextEditingController rawqunataty) {
+  final _formKey = GlobalKey<FormState>();
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
+      int id = 0;
       return Consumer(
         builder: (context, ref, child) {
+          void onsave(ma.Material item) {
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              ref.read(MaterialcontrollerProvider).addMaterial(item);
+
+              Navigator.of(context).pop();
+            }
+          }
+
           return AlertDialog.adaptive(
             title: const Text(
               "Add Material",
               style: TextStyle(color: Color(0xFF90391E)),
             ),
             content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text("Raw material"),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: secondcontroller,
-                  ),
-                  const Text("Deafault unit"),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .4,
-                        child: TypeAheadField<Unit?>(
-                          hideOnEmpty: true,
-                          hideSuggestionsOnKeyboardHide: true,
-                          suggestionsBoxVerticalOffset: 0,
-                          textFieldConfiguration: TextFieldConfiguration(
-                            decoration: const InputDecoration(
-                                hintText: "Select..",
-                                filled: true,
-                                fillColor: Colors.white,
-                                suffixIcon:
-                                    Icon(Icons.keyboard_double_arrow_down)),
-                            controller: main,
-                          ),
-                          suggestionsBoxDecoration:
-                              const SuggestionsBoxDecoration(),
-                          suggestionsCallback: (A) async {
-                            final mylist = await ref
-                                .watch(UnitControllerProvider)
-                                .getall();
-                            return mylist.where((element) {
-                              return element.unit!
-                                  .toLowerCase()
-                                  .contains(A.toLowerCase());
-                            });
-                          },
-                          itemBuilder: (context, Unit? itemData) {
-                            return ListTile(title: Text(itemData!.unit!));
-                          },
-                          onSuggestionSelected: (suggestion) {
-                            // main.text = suggestion!.unit!;
-                            print(suggestion);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: CircleAvatar(
-                          radius: 15,
-                          backgroundColor: const Color(0xFF90391E),
-                          child: IconButton(
-                            onPressed: () {
-                              _showunit(context);
-                            },
-                            icon: const Icon(
-                              Icons.add,
-                              size: 12,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("Raw material"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: controller,
+                      onSaved: (newValue) {
+                        newValue;
+                      },
+                      validator: (value) {
+                        print(value);
+                        if (value == null || value.isEmpty) {
+                          return "Can not be empety";
+                        }
+                        return null;
+                      },
+                    ),
+                    const Text("Deafault unit"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .4,
+                          child: TypeAheadFormField<Unit?>(
+                            hideOnEmpty: true,
+                            hideSuggestionsOnKeyboardHide: true,
+                            suggestionsBoxVerticalOffset: 0,
+                            textFieldConfiguration: TextFieldConfiguration(
+                              decoration: const InputDecoration(
+                                  hintText: "Select..",
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  suffixIcon:
+                                      Icon(Icons.keyboard_double_arrow_down)),
+                              controller: secondcontroller,
                             ),
-                            color: Colors.white,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Can not be empety";
+                              }
+                              return null;
+                            },
+                            suggestionsBoxDecoration:
+                                const SuggestionsBoxDecoration(),
+                            suggestionsCallback: (A) async {
+                              final mylist = await ref
+                                  .watch(UnitControllerProvider)
+                                  .getall();
+                              return mylist.where((element) {
+                                return element.unit!
+                                    .toLowerCase()
+                                    .contains(A.toLowerCase());
+                              });
+                            },
+                            itemBuilder: (context, Unit? itemData) {
+                              return ListTile(title: Text(itemData!.unit!));
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              secondcontroller.text = suggestion!.unit!;
+                              id = suggestion.pkUnitId!;
+                              print(suggestion);
+                            },
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text("Minmum order"),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: secondcontroller,
-                  ),
-                ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: const Color(0xFF90391E),
+                            child: IconButton(
+                              onPressed: () {
+                                _showunit(context, addunit);
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                size: 12,
+                              ),
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text("Minmum order"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      onSaved: (newValue) {},
+                      keyboardType: TextInputType.number,
+                      controller: rawqunataty,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Can not be empety";
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: <Widget>[
@@ -398,6 +669,9 @@ Future<void> _showdialolgmainsubcategory(
                 ),
                 child: const Text('Disable'),
                 onPressed: () {
+                  controller.text = "";
+                  rawqunataty.text = "";
+                  secondcontroller.text = "";
                   Navigator.of(context).pop();
                 },
               ),
@@ -407,6 +681,60 @@ Future<void> _showdialolgmainsubcategory(
                 ),
                 child: const Text('Enable'),
                 onPressed: () {
+                  int amount = int.tryParse(rawqunataty.text) ?? 0;
+                  ma.Material k = ma.Material(
+                      pkMaterialId: 0,
+                      fkUnitId: id,
+                      matPrice: null,
+                      material: false,
+                      materialName: controller.text,
+                      mindemand: amount);
+                  onsave(k);
+                  controller.text = "";
+                  rawqunataty.text = "";
+                  secondcontroller.text = "";
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+Future<void> _showunit(BuildContext context, TextEditingController addunit) {
+  return showAdaptiveDialog(
+    context: context,
+    builder: (context) {
+      return Consumer(
+        builder: (context, ref, child) {
+          return AlertDialog.adaptive(
+            title: const Text("Unit"),
+            content: TextField(
+              decoration: InputDecoration(hintText: "Enter unit..."),
+              controller: addunit,
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Disable'),
+                onPressed: () {
+                  addunit.text = "";
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Enable'),
+                onPressed: () {
+                  print(addunit.text);
+                  ref.read(UnitControllerProvider).addunit(addunit.text);
+                  addunit.text = "";
                   Navigator.of(context).pop();
                 },
               ),
@@ -418,176 +746,303 @@ Future<void> _showdialolgmainsubcategory(
   );
 }
 
-Future<void> _showunit(BuildContext context) {
-  return showAdaptiveDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog.adaptive(
-        title: const Text("Unit"),
-        content: const TextField(
-          decoration: InputDecoration(hintText: "Enter unit..."),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Disable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+final _compkey = GlobalKey<FormState>();
+final GlobalKey<FormFieldState<String>> _textFieldKey = GlobalKey();
 
-Future<void> _showaddingrediennt(BuildContext context) {
+Future<void> _showaddingrediennt(
+  BuildContext context,
+  TextEditingController material,
+  TextEditingController unit,
+  TextEditingController addunit,
+  TextEditingController rawname,
+  TextEditingController rawqunataty,
+  TextEditingController materialqty,
+  int id,
+  String name,
+  TextEditingController caddname,
+  TextEditingController caddquant,
+  TextEditingController caddunit,
+) {
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
-      return AlertDialog.adaptive(
-        title: const Text("Add component"),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Column(
+      int id = 0;
+      return Consumer(
+        builder: (context, ref, child) {
+          void _onsave(/* Componnent item */) {
+            if (_compkey.currentState!.validate()) {
+              _keyy.currentState!.save();
+              print(id);
+              print(caddname.text);
+              print(caddquant.text);
+              print(ref.read(ingrediantosendlistProvider));
+
+              final done = Componnent(
+                  materialName: caddname.text,
+                  fK_Unit_ID: id,
+                  materialComponent: ref.read(ingrediantosendlistProvider));
+              ref.read(componentcontrollerProvider).addMaterial(done);
+            }
+          }
+
+          return AlertDialog.adaptive(
+            title: const Text("Add component"),
+            content: SingleChildScrollView(child: Consumer(
+              builder: (context, ref, child) {
+                return Form(
+                  key: _compkey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Component"),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .30,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            hintText: "Enter component...",
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
-                            ),
-                            errorBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              const Text("Component"),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .30,
+                                child: TextFormField(
+                                  controller: caddname,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'It can not be Empty';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    hintText: "Enter component...",
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Text("Quatatiy"),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .30,
+                                child: TextFormField(
+                                  key: _textFieldKey,
+                                  controller: caddquant,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'It can not be Empty';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    hintText: "Enter quantit....",
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3, color: Color(0xFFFEF9C5)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      const Text("Deafult unit"),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .4,
+                            child: TypeAheadFormField<Unit?>(
+                              // suggestionsBoxController: mainbox,
+                              hideOnEmpty: true,
+                              hideSuggestionsOnKeyboardHide: true,
+                              suggestionsBoxVerticalOffset: 0,
+                              textFieldConfiguration: TextFieldConfiguration(
+                                decoration: const InputDecoration(
+                                    hintText: "Select..",
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    suffixIcon:
+                                        Icon(Icons.keyboard_double_arrow_down)),
+                                controller: caddunit,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'It can not be Empty';
+                                }
+                                return null;
+                              },
+
+                              suggestionsBoxDecoration:
+                                  const SuggestionsBoxDecoration(),
+                              suggestionsCallback: (A) async {
+                                final mylist = await ref
+                                    .watch(UnitControllerProvider)
+                                    .getall();
+                                return mylist.where((element) {
+                                  return element.unit!
+                                      .toLowerCase()
+                                      .contains(A.toLowerCase());
+                                });
+                              },
+                              itemBuilder: (context, Unit? itemData) {
+                                return ListTile(title: Text(itemData!.unit!));
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                caddunit.text = suggestion!.unit!;
+                                id = suggestion.pkUnitId!;
+                                print(suggestion);
+                              },
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text("Quatatiy"),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .30,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            hintText: "Enter quantit....",
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
-                            ),
-                            errorBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Color(0xFFFEF9C5)),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: CircleAvatar(
+                              backgroundColor: const Color(0xFF90391E),
+                              child: IconButton(
+                                onPressed: () {
+                                  _showunit(context, addunit);
+                                },
+                                icon: const Icon(Icons.add),
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  )
-                ],
-              ),
-              const Text("Deafult unit"),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: TypeAheadField<String?>(
-                      // suggestionsBoxController: mainbox,
-                      hideOnEmpty: true,
-                      hideSuggestionsOnKeyboardHide: true,
-                      suggestionsBoxVerticalOffset: 0,
-                      textFieldConfiguration: const TextFieldConfiguration(
-                        decoration: InputDecoration(
-                            hintText: "Select..",
-                            filled: true,
-                            fillColor: Colors.white,
-                            suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
-                        // controller: Maincategory,
-                      ),
-                      suggestionsBoxDecoration:
-                          const SuggestionsBoxDecoration(),
-                      suggestionsCallback: ClassName.getsuggest,
-                      itemBuilder: (context, String? itemData) {
-                        return ListTile(title: Text(itemData!));
-                      },
-                      onSuggestionSelected: (suggestion) {
-                        // Maincategory.text = suggestion!;
-                        print(suggestion);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: CircleAvatar(
-                      backgroundColor: const Color(0xFF90391E),
-                      child: IconButton(
-                        onPressed: () {
-                          _showunit(context);
+                      FittedBox(
+                          child: Fristrow(
+                              context,
+                              material,
+                              unit,
+                              addunit,
+                              rawname,
+                              rawqunataty,
+                              materialqty,
+                              id,
+                              name,
+                              _formKeya2,
+                              caddquant,
+                              isfrrow: false)),
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final list = ref.watch(ComponantProvider);
+                          return SizedBox(
+                            height: /* MediaQuery.of(context).size.height * 0.46 */
+                                300,
+                            width: 350,
+                            child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(12.0),
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: Colors.white),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: constraints.maxWidth * .6,
+                                            child: Text(
+                                                "${list[index].MaterialName}   type: M  Q : ${list[index].Qty}  "),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                ref
+                                                    .read(
+                                                        ingrediantosendlistProvider
+                                                            .notifier)
+                                                    .deleteavalue(list[index]
+                                                        .FK_MaterialID);
+                                                ref
+                                                    .read(ComponantProvider
+                                                        .notifier)
+                                                    .deleteavalue(list[index]
+                                                        .FK_MaterialID);
+                                              },
+                                              icon: const Icon(Icons.delete))
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              itemCount: list.length,
+                            ),
+                          );
                         },
-                        icon: const Icon(Icons.add),
-                        color: Colors.white,
-                      ),
-                    ),
+                      )
+                    ],
                   ),
-                ],
+                );
+              },
+            )),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Disable'),
+                onPressed: () {
+                  caddname.text = "";
+                  caddquant.text = "";
+                  caddunit.text = "";
+                  ref.read(ComponantProvider.notifier).deletall();
+                  ref.read(ingrediantosendlistProvider.notifier).deletall();
+                  _formKeya2.currentState!.reset();
+                  Navigator.of(context).pop();
+                },
               ),
-              FittedBox(child: Fristrow(context))
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Enable'),
+                onPressed: () {
+                  // final item = Componnent(
+                  //     fK_Unit_ID: id,
+                  //     materialName: caddname.text,
+                  //     mindemand: caddquant.text,
+                  //     materialComponent: );
+                  _onsave();
+                  caddname.text = "";
+                  caddquant.text = "";
+                  caddunit.text = "";
+                  ref.read(ComponantProvider.notifier).deletall();
+                  ref.read(ingrediantosendlistProvider.notifier).deletall();
+                  _formKeya2.currentState!.reset();
+                },
+              ),
             ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Disable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+          );
+        },
       );
     },
   );

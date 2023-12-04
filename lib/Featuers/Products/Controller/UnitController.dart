@@ -1,4 +1,4 @@
-import 'package:buffalos/apis/Unitapi.dart';
+import '../../../apis/Unitapi.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/unit.dart';
@@ -16,5 +16,10 @@ class UnitController {
     final list = await unitapi.getUnits();
     print(list);
     return list;
+  }
+
+  Future<int> addunit(String unit) async {
+    final id = await unitapi.addunit(unit);
+    return id;
   }
 }

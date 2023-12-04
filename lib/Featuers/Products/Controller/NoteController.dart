@@ -1,6 +1,6 @@
-import '../../../apis/Notesapi.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../apis/Notesapi.dart';
 import '../../../models/Note.dart';
 
 final NoteControerProvider = Provider((ref) {

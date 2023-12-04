@@ -27,6 +27,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
   late final itemdata;
   String? link;
   String iteamid = "";
+  String iteamname = "";
   bool frist = true;
   void onsave() {
     if (_formKey.currentState!.validate()) {
@@ -51,6 +52,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
         PerapareAre = TextEditingController(text: arrg["Kitchen"]);
         price = TextEditingController(text: itemdata!["price"].toString());
         iteamid = itemdata!["pkItemId"].toString();
+        iteamname = itemdata!["itemName"];
       } else {
         fristname = TextEditingController();
         secondname = TextEditingController();
@@ -414,6 +416,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                             title: "Add Ingrediants",
                             page: addIngredient.path,
                             itemid: iteamid,
+                            itemname: iteamname,
                           )
                         ],
                       ),
@@ -469,7 +472,8 @@ Future<void> _showdialolgmain(
             ),
             content: TextFormField(
               controller: controller,
-              decoration: const InputDecoration(hintText: "Enter Main Category"),
+              decoration:
+                  const InputDecoration(hintText: "Enter Main Category"),
             ),
             actions: <Widget>[
               TextButton(

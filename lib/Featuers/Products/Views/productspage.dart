@@ -1,4 +1,4 @@
-import 'package:buffalos/providers/igrediantsprovider.dart';
+import '../../../providers/igrediantsprovider.dart';
 
 import '../Controller/itemscontroller.dart';
 import 'addandsave.dart';
@@ -31,6 +31,7 @@ class _productPageState extends ConsumerState<productPage> {
   TextEditingController items = TextEditingController();
   SuggestionsBoxController enditcategory = SuggestionsBoxController();
   SuggestionsBoxController endititems = SuggestionsBoxController();
+  String itemname = "";
   @override
   void dispose() {
     category.dispose();
@@ -202,6 +203,7 @@ class _productPageState extends ConsumerState<productPage> {
                                 },
                                 onSuggestionSelected: (suggestion) {
                                   items.text = suggestion!.itemName!;
+
                                   _itemkey = suggestion.pkItemId!.toString();
                                 },
                               ),

@@ -1,5 +1,6 @@
-import '../models/Note.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/Note.dart';
 
 class notelistNotifier extends Notifier<List<Note>> {
   @override

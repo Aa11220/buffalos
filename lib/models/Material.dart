@@ -37,7 +37,7 @@ class Material {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'pkMaterialId': pkMaterialId,
+      'pkMaterialId': pkMaterialId ?? 0,
       'materialName': materialName,
       'mindemand': mindemand,
       'fkUnitId': fkUnitId,

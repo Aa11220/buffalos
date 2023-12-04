@@ -1,5 +1,5 @@
-import 'package:buffalos/apis/MaterialAPi.dart';
-import 'package:buffalos/models/Material.dart';
+import '../../../apis/MaterialAPi.dart';
+import '../../../models/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final MaterialcontrollerProvider = Provider((ref) {
@@ -16,5 +16,10 @@ class Materialcontroller {
   Future<List<Material>> getall() async {
     final mylist = await _materialapi.fetchitems();
     return mylist;
+  }
+
+  Future<int> addMaterial(Material item) async {
+    final id = _materialapi.addMaterial(item);
+    return id;
   }
 }
