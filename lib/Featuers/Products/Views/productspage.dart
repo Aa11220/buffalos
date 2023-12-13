@@ -25,6 +25,8 @@ class productPage extends ConsumerStatefulWidget {
 }
 
 class _productPageState extends ConsumerState<productPage> {
+  List<Category> catlist = [];
+  List<item> _listitem = [];
   var isloading = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController category = TextEditingController();
@@ -32,6 +34,16 @@ class _productPageState extends ConsumerState<productPage> {
   SuggestionsBoxController enditcategory = SuggestionsBoxController();
   SuggestionsBoxController endititems = SuggestionsBoxController();
   String itemname = "";
+  void loadlists() async {
+    catlist = await ref.read(CategoriesApiprovider).fetchCategories();
+  }
+
+  @override
+  void initState() {
+    loadlists();
+    super.initState();
+  }
+
   @override
   void dispose() {
     category.dispose();
@@ -99,13 +111,15 @@ class _productPageState extends ConsumerState<productPage> {
                             ),
                             SizedBox(
                               width: 250,
-                              height: 50,
+                              height: 70,
                               child: TypeAheadFormField<Category?>(
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
-                                      value.trim().isEmpty) {
-                                    return "Please Select";
+                                      value.trim().isEmpty ||
+                                      !catlist.any((element) =>
+                                          element.categoryName == value)) {
+                                    return "Please Select valid item";
                                   } else {
                                     return null;
                                   }
@@ -125,10 +139,10 @@ class _productPageState extends ConsumerState<productPage> {
                                 suggestionsBoxDecoration:
                                     const SuggestionsBoxDecoration(),
                                 suggestionsCallback: (A) async {
-                                  final mylist = await ref
+                                  final mylist1 = await ref
                                       .watch(CategoriesApiprovider)
                                       .fetchCategories();
-                                  return mylist.where((element) {
+                                  return mylist1.where((element) {
                                     return element.categoryName
                                         .toLowerCase()
                                         .contains(A.toLowerCase());
@@ -138,11 +152,14 @@ class _productPageState extends ConsumerState<productPage> {
                                   return ListTile(
                                       title: Text(itemData!.categoryName));
                                 },
-                                onSuggestionSelected: (suggestion) {
+                                onSuggestionSelected: (suggestion) async {
                                   items.text = "";
                                   category.text = suggestion!.categoryName;
                                   _Categorykey =
                                       suggestion.pkCategory.toString();
+                                  _listitem = await ref
+                                      .read(Itemcontrollerprovider)
+                                      .getItems(_Categorykey);
                                   print(suggestion);
                                 },
                               ),
@@ -162,19 +179,9 @@ class _productPageState extends ConsumerState<productPage> {
                             ),
                             SizedBox(
                               width: 250,
-                              height: 50,
+                              height: 70,
                               child: TypeAheadFormField<item?>(
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty ||
-                                      value.trim().isEmpty) {
-                                    return "Please Select";
-                                  } else {
-                                    return null;
-                                  }
-                                },
                                 onSaved: (newValue) {},
-                                suggestionsBoxController: endititems,
                                 suggestionsBoxVerticalOffset: 0,
                                 textFieldConfiguration: TextFieldConfiguration(
                                   decoration: const InputDecoration(
@@ -205,6 +212,17 @@ class _productPageState extends ConsumerState<productPage> {
                                   items.text = suggestion!.itemName!;
 
                                   _itemkey = suggestion.pkItemId!.toString();
+                                },
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().isEmpty ||
+                                      !_listitem.any((element) =>
+                                          element.itemName == value)) {
+                                    return "Please Select valid item";
+                                  } else {
+                                    return null;
+                                  }
                                 },
                               ),
                             ),

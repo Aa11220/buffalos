@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Noteandingredient extends ConsumerStatefulWidget {
   const Noteandingredient(
       {super.key,
-      required this.title,
+      required this.search,
       required this.page,
       required this.itemid});
-  final String title;
+  final bool search;
   final String page;
   final String itemid;
 
@@ -39,7 +39,9 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
     // TODO: implement initState
     super.initState();
 
-    getlistfromapi();
+    if (widget.search == true) {
+      getlistfromapi();
+    }
   }
 
   @override
@@ -51,9 +53,10 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(widget.page, arguments: widget.itemid)
-                    .then((value) {
+                Navigator.of(context).pushNamed(widget.page, arguments: {
+                  "id": widget.itemid,
+                  "search": widget.search
+                }).then((value) {
                   setState(() {});
                 });
               },
@@ -69,18 +72,23 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                 ),
               ),
               child: Text(
-                widget.title,
+                "Add Note",
                 style: const TextStyle(color: Colors.white),
               ),
             ),
             for (Note i in /*ref.watch(notelistProvider)*/ _text)
-              Container(
-                  margin: const EdgeInsets.all(2),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14)),
-                  child: Text(i.note))
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * .42,
+                ),
+                child: Container(
+                    margin: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14)),
+                    child: Text(i.note)),
+              )
           ],
         );
       },

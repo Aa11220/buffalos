@@ -1,6 +1,12 @@
+import 'package:buffalos/Featuers/EndShift/view/End_Shift_Screen.dart';
+import 'package:buffalos/Featuers/EndShift/view/Manager_Aproval.dart';
+
+import 'Featuers/report/views/StockBalanceview.dart';
+
 import 'Featuers/Products/Views/addnote.dart';
 import 'Featuers/Products/Views/productspage.dart';
 import 'Featuers/login/views/loginPage.dart';
+import 'Featuers/report/views/safeBalanceScreen.dart';
 import 'test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,8 +44,11 @@ class MyApp extends StatelessWidget {
         addnote.path: (context) => const addnote(),
         productPage.path: (context) => const productPage(),
         addandsave.path: (context) => const addandsave(),
+        StockBalance.path: (context) => StockBalance(),
+        MangerAproval.path: (context) => MangerAproval(),
+        EndShift.endpath: (context) => EndShift(),
+        SafeDataScreen.path: (context) => SafeDataScreen(),
         '/test': (context) => const done(),
-        
       },
     );
   }

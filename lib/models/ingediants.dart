@@ -2,15 +2,15 @@
 import 'dart:convert';
 
 class ingrediants {
-  int FK_ItemID;
-  String ItemName;
+  int? FK_ItemID;
+  String? ItemName;
   int FK_MaterialID;
   String MaterialName;
   double Qty;
   String MatType;
   ingrediants({
-    required this.FK_ItemID,
-    required this.ItemName,
+    this.FK_ItemID,
+    this.ItemName,
     required this.FK_MaterialID,
     required this.MaterialName,
     required this.Qty,
@@ -46,10 +46,21 @@ class ingrediants {
     };
   }
 
+  Map<String, dynamic> toMapapi() {
+    return <String, dynamic>{
+      'FK_ItemID': FK_ItemID,
+      // 'ItemName': ItemName,
+      'FK_MaterialID': FK_MaterialID,
+      // 'MaterialName': MaterialName,
+      'Qty': Qty,
+      // 'MatType': MatType,
+    };
+  }
+
   factory ingrediants.fromMap(Map<String, dynamic> map) {
     return ingrediants(
-      FK_ItemID: map['FK_ItemID'] as int,
-      ItemName: map['ItemName'] as String,
+      FK_ItemID: map['FK_ItemID'] != null ? map['FK_ItemID'] as int : null,
+      ItemName: map['ItemName'] != null ? map['ItemName'] as String : null,
       FK_MaterialID: map['FK_MaterialID'] as int,
       MaterialName: map['MaterialName'] as String,
       Qty: map['Qty'] as double,
@@ -58,6 +69,7 @@ class ingrediants {
   }
 
   String toJson() => json.encode(toMap());
+  String toJsonapi() => json.encode(toMapapi());
 
   factory ingrediants.fromJson(String source) =>
       ingrediants.fromMap(json.decode(source) as Map<String, dynamic>);

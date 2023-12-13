@@ -1,4 +1,4 @@
-import 'package:buffalos/apis/componentapi.dart';
+import '../../../apis/componentapi.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/Componentcategory.dart';

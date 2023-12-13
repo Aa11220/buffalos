@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:buffalos/apis/userapi.dart';
-import 'package:buffalos/models/Componentcategory.dart';
+import 'userapi.dart';
+import '../models/Componentcategory.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/Material.dart';

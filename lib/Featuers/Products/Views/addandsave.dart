@@ -1,3 +1,10 @@
+import '../../../apis/fileapi.dart';
+import '../../../models/item.dart';
+import '../../../models/itemwithingred.dart';
+
+import '../../../apis/subcategory.dart';
+import '../../../apis/updateandadditem.dart';
+import '../../../providers/igrediantsprovider.dart';
 import '../Controller/kitchencontroller.dart';
 import '../widget/notesandingrediant.dart';
 
@@ -23,11 +30,22 @@ class addandsave extends ConsumerStatefulWidget {
 }
 
 class _addandsaveState extends ConsumerState<addandsave> {
+  void pickfile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      ref.read(fileProvider).addfile(file, "1");
+    } else {
+      // User canceled the picker
+    }
+  }
+
   late final arrg;
   late final itemdata;
   String? link;
   String iteamid = "";
   String iteamname = "";
+  late bool search;
   bool frist = true;
   void onsave() {
     if (_formKey.currentState!.validate()) {
@@ -41,8 +59,8 @@ class _addandsaveState extends ConsumerState<addandsave> {
 
     if (frist) {
       arrg = ModalRoute.of(context)!.settings.arguments as Map;
-
-      if (arrg['Search']) {
+      search = arrg['Search'];
+      if (search) {
         itemdata = arrg["item"] as Map;
         fristname = TextEditingController(text: itemdata!["itemName"]);
         secondname = TextEditingController(text: itemdata!["itemNameLang2"]);
@@ -52,7 +70,10 @@ class _addandsaveState extends ConsumerState<addandsave> {
         PerapareAre = TextEditingController(text: arrg["Kitchen"]);
         price = TextEditingController(text: itemdata!["price"].toString());
         iteamid = itemdata!["pkItemId"].toString();
+        iteamidint = itemdata!["pkItemId"];
         iteamname = itemdata!["itemName"];
+        fkPrepareId = itemdata["fkPrepareId"];
+        catid = itemdata!["fkCategoryId"];
       } else {
         fristname = TextEditingController();
         secondname = TextEditingController();
@@ -73,7 +94,9 @@ class _addandsaveState extends ConsumerState<addandsave> {
   late TextEditingController subcategory;
   late TextEditingController PerapareAre;
   late TextEditingController price;
-
+  late int iteamidint;
+  late int fkPrepareId;
+  late int catid;
   SuggestionsBoxController mainbox = SuggestionsBoxController();
   SuggestionsBoxController subbox = SuggestionsBoxController();
   SuggestionsBoxController prebbox = SuggestionsBoxController();
@@ -409,11 +432,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Noteandingredient(
-                              title: "Add Note",
+                              search: search,
                               page: addnote.path,
                               itemid: iteamid),
                           igrediants(
-                            title: "Add Ingrediants",
+                            search: search,
                             page: addIngredient.path,
                             itemid: iteamid,
                             itemname: iteamname,
@@ -425,8 +448,29 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       ),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {
-                            onsave();
+                          onPressed: () async {
+                            final intprice = double.tryParse(price.text) ?? 0;
+                            // onsave();
+
+                            final loo = itemwithingred(
+                                it: item(
+                                    active: true,
+                                    fkCategoryId: catid,
+                                    fkPrepareId: fkPrepareId,
+                                    itemImage2: "",
+                                    itemImage: "",
+                                    itemName: fristname.text,
+                                    itemNameLang2: secondname.text,
+                                    pkItemId: iteamidint,
+                                    price: intprice),
+                                list: ref.read(ingredianlistProvider));
+                            final listtt =
+                                ref.read(subcategoryapiProvider).getsubcat("1");
+                            print(listtt);
+                            await ref
+                                .read(addandupdateProvider)
+                                .updatewithingrediant(loo);
+                            print(loo.toMap());
                           },
                           style: ButtonStyle(
                             splashFactory: NoSplash.splashFactory,
@@ -588,14 +632,4 @@ Future<void> _showdialolgmainsubcategory(
       );
     },
   );
-}
-
-void pickfile() async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles();
-  if (result != null) {
-    File file = File(result.files.single.path!);
-    print(file.uri);
-  } else {
-    // User canceled the picker
-  }
 }

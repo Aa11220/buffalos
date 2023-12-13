@@ -21,10 +21,8 @@ class ingredianttosendslist extends Notifier<List<materialtosend>> {
   }
 
   void deleteavalue(int value) {
-    state = [
-      for (final anitem in state)
-        if (anitem.fkComponent != value) anitem
-    ];
+    state.removeAt(0);
+    state = [...state];
   }
 
   getall() {

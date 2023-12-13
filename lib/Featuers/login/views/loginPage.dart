@@ -111,11 +111,13 @@ class _loginPageState extends ConsumerState<loginPage> {
                                               },
                                               decoration: InputDecoration(
                                                 hintText: "Enter your Email",
-                                                prefixIcon: const Icon(Icons.lock),
+                                                prefixIcon:
+                                                    const Icon(Icons.lock),
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                        borderSide: const BorderSide(
-                                                            width: 1),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                width: 1),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(15)),
@@ -152,7 +154,8 @@ class _loginPageState extends ConsumerState<loginPage> {
                                               obscureText: _secuired,
                                               decoration: InputDecoration(
                                                 hintText: "Enter your password",
-                                                prefixIcon: const Icon(Icons.lock),
+                                                prefixIcon:
+                                                    const Icon(Icons.lock),
                                                 suffixIcon: IconButton(
                                                   onPressed: () {
                                                     setState(() {
@@ -167,8 +170,9 @@ class _loginPageState extends ConsumerState<loginPage> {
                                                 ),
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                        borderSide: const BorderSide(
-                                                            width: 1),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                width: 1),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(15)),
@@ -210,8 +214,8 @@ class _loginPageState extends ConsumerState<loginPage> {
                                                           splashFactory: NoSplash
                                                               .splashFactory),
                                                       onPressed: () {},
-                                                      child:
-                                                          const Text("Login to MQQ"),
+                                                      child: const Text(
+                                                          "Login to MQQ"),
                                                     ),
                                                   ),
                                                   Container(

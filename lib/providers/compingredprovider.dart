@@ -1,5 +1,6 @@
-import '../models/ingediants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/ingediants.dart';
 
 class Cingrediantslist extends Notifier<List<ingrediants>> {
   @override
@@ -20,10 +21,8 @@ class Cingrediantslist extends Notifier<List<ingrediants>> {
   }
 
   void deleteavalue(int value) {
-    state = [
-      for (final anitem in state)
-        if (anitem.FK_MaterialID != value) anitem
-    ];
+    state.removeAt(value);
+    state = [...state];
   }
 
   getall() {

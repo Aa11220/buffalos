@@ -21,6 +21,7 @@ class addnote extends ConsumerStatefulWidget {
 }
 
 class _addnoteState extends ConsumerState<addnote> {
+  var intid;
   TextEditingController note = TextEditingController();
   @override
   void dispose() {
@@ -30,9 +31,13 @@ class _addnoteState extends ConsumerState<addnote> {
 
   @override
   Widget build(BuildContext context) {
-    final itemid = ModalRoute.of(context)!.settings.arguments as String;
-    final intid = int.parse(itemid);
+    final item = ModalRoute.of(context)!.settings.arguments as Map;
 
+    if (item["search"]) {
+      intid = int.tryParse(item["id"]);
+    } else {
+      intid = null;
+    }
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(

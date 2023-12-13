@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:buffalos/Featuers/Products/Controller/componentcontroller.dart';
-import 'package:buffalos/models/Componentcategory.dart';
+import '../Controller/componentcontroller.dart';
+import '../../../models/Componentcategory.dart';
 
 import '../../../models/maaterialtosend.dart';
 import '../../../providers/ingredtosend.dart';
@@ -29,6 +29,9 @@ class addIngredient extends ConsumerStatefulWidget {
 }
 
 class _addIngredientState extends ConsumerState<addIngredient> {
+  String? itemidstring;
+  int? itemid;
+  String? itename;
   TextEditingController material = TextEditingController();
   TextEditingController materialqty = TextEditingController();
   TextEditingController materialqty2 = TextEditingController();
@@ -67,12 +70,17 @@ class _addIngredientState extends ConsumerState<addIngredient> {
 
   @override
   Widget build(BuildContext context) {
-    print(1);
     final list = ref.watch(ingredianlistProvider);
     final itemdata = ModalRoute.of(context)!.settings.arguments as Map;
-    final itemidstring = itemdata["id"];
-    final itemid = int.tryParse(itemidstring)!;
-    final itename = itemdata["name"];
+    if (itemdata["search"]) {
+      itemidstring = itemdata["id"];
+      itemid = int.tryParse(itemidstring!)!;
+      itename = itemdata["name"];
+    } else {
+      itemidstring = null;
+      itemid = null;
+      itename = null;
+    }
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -134,8 +142,13 @@ class _addIngredientState extends ConsumerState<addIngredient> {
                               children: [
                                 SizedBox(
                                   width: constraints.maxWidth * .7,
-                                  child: Text(
-                                      "${list[index].MaterialName}      qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"}"),
+                                  child: Column(
+                                    children: [
+                                      Text("${list[index].MaterialName}"),
+                                      Text(
+                                          "   qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
+                                    ],
+                                  ),
                                 ),
                                 IconButton(
                                     onPressed: () {
@@ -143,8 +156,7 @@ class _addIngredientState extends ConsumerState<addIngredient> {
                                         ref
                                             .read(
                                                 ingredianlistProvider.notifier)
-                                            .deleteavalue(
-                                                list[index].FK_MaterialID);
+                                            .deleteavalue(index);
                                       });
                                     },
                                     icon: const Icon(Icons.delete))
@@ -190,7 +202,7 @@ class _addIngredientState extends ConsumerState<addIngredient> {
 
 final _formKeya = GlobalKey<FormState>();
 final _formKeya2 = GlobalKey<FormState>();
-
+int material_id = 0;
 Consumer Fristrow(
     BuildContext context,
     TextEditingController material,
@@ -199,8 +211,8 @@ Consumer Fristrow(
     TextEditingController rawname,
     TextEditingController rawqunataty,
     TextEditingController materialqty,
-    int id,
-    String name,
+    int? id,
+    String? name,
     GlobalKey<FormState> key,
     TextEditingController secondrow,
     {bool isfrrow = true}) {
@@ -210,19 +222,20 @@ Consumer Fristrow(
         if (key.currentState!.validate()) {
           key.currentState!.save();
 
-          if (isfrrow) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Enter item and quantaty")));
-          }
+          // if (isfrrow) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(content: Text("Enter item and quantaty")));
+          // }
 
           double qty = double.tryParse(materialqty.text)!;
-          final fkmaterial = Random().nextInt(100);
+
           if (isfrrow == true) {
+            print(material_id);
             ref.read(ingredianlistProvider.notifier).addnote(
                   ingrediants(
                       FK_ItemID: id,
                       ItemName: name,
-                      FK_MaterialID: fkmaterial,
+                      FK_MaterialID: material_id,
                       MaterialName: material.text,
                       Qty: qty,
                       MatType: "RAW"),
@@ -236,17 +249,20 @@ Consumer Fristrow(
 
               ref.read(ingrediantosendlistProvider.notifier).addnote(
                   materialtosend(
-                      fkComponent: fkmaterial,
+                      fkComponent: material_id,
                       id: 0,
                       qty: qty,
                       mokQty: amount));
-              ref.read(ComponantProvider.notifier).addnote(ingrediants(
-                  FK_ItemID: id,
-                  ItemName: name,
-                  FK_MaterialID: fkmaterial,
-                  MaterialName: material.text,
-                  Qty: qty,
-                  MatType: "RAW"));
+              ref.read(ComponantProvider.notifier).addnote(
+                    ingrediants(
+                      FK_ItemID: id,
+                      ItemName: name,
+                      FK_MaterialID: material_id,
+                      MaterialName: material.text,
+                      Qty: qty,
+                      MatType: "RAW",
+                    ),
+                  );
             }
           }
         }
@@ -298,8 +314,8 @@ Consumer Fristrow(
                       return ListTile(title: Text(itemData!.materialName!));
                     },
                     onSuggestionSelected: (suggestion) {
-                      material.text = suggestion!.materialName!;
-
+                      material.text = "${suggestion!.materialName!} ";
+                      material_id = suggestion.pkMaterialId!;
                       print(suggestion);
                     },
                   ),
@@ -370,8 +386,8 @@ Consumer Secondrow(
     TextEditingController rawname,
     TextEditingController rawqunataty,
     TextEditingController materialqty,
-    int id,
-    String name,
+    int? id,
+    String? name,
     TextEditingController cname,
     TextEditingController cqty,
     TextEditingController caddname,
@@ -757,8 +773,8 @@ Future<void> _showaddingrediennt(
   TextEditingController rawname,
   TextEditingController rawqunataty,
   TextEditingController materialqty,
-  int id,
-  String name,
+  int? id,
+  String? name,
   TextEditingController caddname,
   TextEditingController caddquant,
   TextEditingController caddunit,
@@ -769,7 +785,7 @@ Future<void> _showaddingrediennt(
       int id = 0;
       return Consumer(
         builder: (context, ref, child) {
-          void _onsave(/* Componnent item */) {
+          void _onsave() {
             if (_compkey.currentState!.validate()) {
               _keyy.currentState!.save();
               print(id);
@@ -970,8 +986,14 @@ Future<void> _showaddingrediennt(
                                         children: [
                                           SizedBox(
                                             width: constraints.maxWidth * .6,
-                                            child: Text(
-                                                "${list[index].MaterialName}   type: M  Q : ${list[index].Qty}  "),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                    "${list[index].MaterialName}"),
+                                                Text(
+                                                    "   qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
+                                              ],
+                                            ),
                                           ),
                                           IconButton(
                                               onPressed: () {
@@ -979,13 +1001,11 @@ Future<void> _showaddingrediennt(
                                                     .read(
                                                         ingrediantosendlistProvider
                                                             .notifier)
-                                                    .deleteavalue(list[index]
-                                                        .FK_MaterialID);
+                                                    .deleteavalue(index);
                                                 ref
                                                     .read(ComponantProvider
                                                         .notifier)
-                                                    .deleteavalue(list[index]
-                                                        .FK_MaterialID);
+                                                    .deleteavalue(index);
                                               },
                                               icon: const Icon(Icons.delete))
                                         ],

@@ -29,6 +29,7 @@ class Itemsapi {
           'Authorization': 'Bearer $tokken'
         },
       );
+      print(response.body);
       final body = jsonDecode(response.body);
       final list = body["rs"]["data"];
       print(list);

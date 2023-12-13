@@ -10,11 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class igrediants extends ConsumerStatefulWidget {
   const igrediants(
       {super.key,
-      required this.title,
+      required this.search,
       required this.page,
       required this.itemid,
       required this.itemname});
-  final String title;
+  final bool search;
   final String page;
   final String itemid;
   final String itemname;
@@ -35,7 +35,9 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setlist();
+    if (widget.search == true) {
+      setlist();
+    }
   }
 
   @override
@@ -50,8 +52,11 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).pushNamed(addIngredient.path,
-                    arguments: {"id": widget.itemid, "name": widget.itemname});
+                Navigator.of(context).pushNamed(addIngredient.path, arguments: {
+                  "id": widget.itemid,
+                  "name": widget.itemname,
+                  "search": widget.search
+                });
               },
               style: ButtonStyle(
                 splashFactory: NoSplash.splashFactory,
@@ -65,18 +70,25 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
                 ),
               ),
               child: Text(
-                widget.title,
+                "Add ingrediant",
                 style: const TextStyle(color: Colors.white),
               ),
             ),
             for (ingrediants i in alllist)
-              Container(
-                  margin: const EdgeInsets.all(2),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14)),
-                  child: Text(i.MaterialName))
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * .5,
+                ),
+                child: Container(
+                    margin: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14)),
+                    child: Text(
+                      i.MaterialName,
+                    )),
+              )
           ],
         );
       },
