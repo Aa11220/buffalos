@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class EmpData {
+  final double? Discount;
   final String? StartTime;
   final int? Hordercount;
   final double? price;
@@ -20,6 +21,7 @@ class EmpData {
   final double? TransferedTo;
   final double? NetCash;
   EmpData({
+    this.Discount,
     this.StartTime,
     this.Hordercount,
     this.price,
@@ -97,6 +99,9 @@ class EmpData {
 
   factory EmpData.fromMap(Map<String, dynamic> map) {
     return EmpData(
+      Discount: map['Table'][0]["Discount"] != null
+          ? map['Table'][0]['Discount'] as double
+          : null,
       StartTime: map['Table11'][0]["StartTime"] != null
           ? map['Table11'][0]['StartTime'] as String
           : null,

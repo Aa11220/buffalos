@@ -1,26 +1,25 @@
-import '../../../apis/fileapi.dart';
-import '../../../models/item.dart';
-import '../../../models/itemwithingred.dart';
+import 'dart:io';
 
-import '../../../apis/subcategory.dart';
-import '../../../apis/updateandadditem.dart';
-import '../../../providers/igrediantsprovider.dart';
-import '../Controller/kitchencontroller.dart';
-import '../widget/notesandingrediant.dart';
-
-import '../../../models/kitchen.dart';
-import '../../../utility/commonwidget/drawer.dart';
-import '../../../utility/lineargragr.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'dart:io';
 
-import '../widget/ingrediants.dart';
-import 'addnote.dart';
-import 'addingred.dart';
+import '../../../apis/fileapi.dart';
+import '../../../apis/subcategory.dart';
+import '../../../apis/updateandadditem.dart';
+import '../../../models/item.dart';
+import '../../../models/itemwithingred.dart';
+import '../../../models/kitchen.dart';
+import '../../../providers/igrediantsprovider.dart';
+import '../../../utility/commonwidget/drawer.dart';
 import '../../../utility/dummy.dart';
+import '../../../utility/lineargragr.dart';
+import '../Controller/kitchencontroller.dart';
+import '../widget/ingrediants.dart';
+import '../widget/notesandingrediant.dart';
+import 'addingred.dart';
+import 'addnote.dart';
 
 class addandsave extends ConsumerStatefulWidget {
   const addandsave({super.key});
@@ -457,7 +456,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                     active: true,
                                     fkCategoryId: catid,
                                     fkPrepareId: fkPrepareId,
-                                    itemImage2: "",
+                                    itemImage2: null,
                                     itemImage: "",
                                     itemName: fristname.text,
                                     itemNameLang2: secondname.text,

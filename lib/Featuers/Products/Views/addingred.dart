@@ -87,7 +87,7 @@ class _addIngredientState extends ConsumerState<addIngredient> {
           gradient: linear,
         ),
         child: Scaffold(
-          appBar: const Customappbar(
+          appBar:  Customappbar(
             text: "Ingredients",
           ),
           drawer: MyDrawer(context),
@@ -144,7 +144,7 @@ class _addIngredientState extends ConsumerState<addIngredient> {
                                   width: constraints.maxWidth * .7,
                                   child: Column(
                                     children: [
-                                      Text("${list[index].MaterialName}"),
+                                      Text(list[index].MaterialName),
                                       Text(
                                           "   qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
                                     ],
@@ -218,7 +218,7 @@ Consumer Fristrow(
     {bool isfrrow = true}) {
   return Consumer(
     builder: (context, ref, child) {
-      void _onsave() {
+      void onsave() {
         if (key.currentState!.validate()) {
           key.currentState!.save();
 
@@ -287,7 +287,7 @@ Consumer Fristrow(
                     hideSuggestionsOnKeyboardHide: true,
                     suggestionsBoxVerticalOffset: isfrrow == true ? 0 : 0,
                     textFieldConfiguration: TextFieldConfiguration(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           hintText: "Select..",
                           filled: true,
                           fillColor: Colors.white,
@@ -352,7 +352,7 @@ Consumer Fristrow(
                       return null;
                     },
                     controller: materialqty,
-                    decoration: InputDecoration(hintText: "Enter quantit...."),
+                    decoration: const InputDecoration(hintText: "Enter quantit...."),
                   ),
                 ),
               ],
@@ -361,7 +361,7 @@ Consumer Fristrow(
               padding: const EdgeInsets.only(top: 32.0),
               child: IconButton(
                 onPressed: () {
-                  _onsave();
+                  onsave();
                   material.text = "";
                   materialqty.text = "";
                 },
@@ -395,10 +395,10 @@ Consumer Secondrow(
     TextEditingController caddunit) {
   return Consumer(
     builder: (context, ref, child) {
-      void _onsave() {
+      void onsave() {
         if (cname.text == "" || cqty == "") {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Enter item and quantaty")));
+              .showSnackBar(const SnackBar(content: Text("Enter item and quantaty")));
         } else {
           if (_keyy.currentState!.validate()) {
             _keyy.currentState!.save();
@@ -513,7 +513,7 @@ Consumer Secondrow(
                       return null;
                     },
                     controller: cqty,
-                    decoration: InputDecoration(hintText: "Enter quantit...."),
+                    decoration: const InputDecoration(hintText: "Enter quantit...."),
                   ),
                 )
               ],
@@ -522,7 +522,7 @@ Consumer Secondrow(
               padding: const EdgeInsets.only(top: 32.0),
               child: IconButton(
                 onPressed: () {
-                  _onsave();
+                  onsave();
                   cname.text = "";
                   cqty.text = "";
                 },
@@ -543,7 +543,7 @@ Future<void> _showdialolgmainsubcategory(
     TextEditingController secondcontroller,
     TextEditingController addunit,
     TextEditingController rawqunataty) {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
@@ -551,8 +551,8 @@ Future<void> _showdialolgmainsubcategory(
       return Consumer(
         builder: (context, ref, child) {
           void onsave(ma.Material item) {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
+            if (formKey.currentState!.validate()) {
+              formKey.currentState!.save();
               ref.read(MaterialcontrollerProvider).addMaterial(item);
 
               Navigator.of(context).pop();
@@ -566,7 +566,7 @@ Future<void> _showdialolgmainsubcategory(
             ),
             content: SingleChildScrollView(
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -728,7 +728,7 @@ Future<void> _showunit(BuildContext context, TextEditingController addunit) {
           return AlertDialog.adaptive(
             title: const Text("Unit"),
             content: TextField(
-              decoration: InputDecoration(hintText: "Enter unit..."),
+              decoration: const InputDecoration(hintText: "Enter unit..."),
               controller: addunit,
             ),
             actions: <Widget>[
@@ -785,7 +785,7 @@ Future<void> _showaddingrediennt(
       int id = 0;
       return Consumer(
         builder: (context, ref, child) {
-          void _onsave() {
+          void onsave() {
             if (_compkey.currentState!.validate()) {
               _keyy.currentState!.save();
               print(id);
@@ -968,7 +968,7 @@ Future<void> _showaddingrediennt(
                                 300,
                             width: 350,
                             child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return LayoutBuilder(
@@ -989,7 +989,7 @@ Future<void> _showaddingrediennt(
                                             child: Column(
                                               children: [
                                                 Text(
-                                                    "${list[index].MaterialName}"),
+                                                    list[index].MaterialName),
                                                 Text(
                                                     "   qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
                                               ],
@@ -1051,7 +1051,7 @@ Future<void> _showaddingrediennt(
                   //     materialName: caddname.text,
                   //     mindemand: caddquant.text,
                   //     materialComponent: );
-                  _onsave();
+                  onsave();
                   caddname.text = "";
                   caddquant.text = "";
                   caddunit.text = "";

@@ -1,6 +1,8 @@
-import 'package:buffalos/apis/userapi.dart';
-import 'package:buffalos/models/UserApproval.dart';
-import 'package:buffalos/utility/contants.dart';
+import 'dart:developer';
+
+import '../userapi.dart';
+import '../../models/UserApproval.dart';
+import '../../utility/contants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,9 +28,11 @@ class UserApprovalApi {
         },
         body: jsonEncode({"userName": User, "password": Password}));
     print(response.statusCode);
+    log(response.body);
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
-      return result;
+      print(result[0]);
+      return UserApprovalResponse.fromMap(result[0]);
     } else {
       throw Exception("Not approved");
     }

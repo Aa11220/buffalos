@@ -13,8 +13,8 @@ class StockMaterialController {
   final StockMaterialApi api;
 
   StockMaterialController({required this.api});
-  Future<List<StockMaterial>> getStockStore(int? fk_store_id) async {
-    final List = await api.getStores(fk_store_id ?? 0);
+  Future<List<StockMaterial>> getStockStore(int? fkStoreId) async {
+    final List = await api.getStores(fkStoreId ?? 0);
     print(List);
     return List;
   }

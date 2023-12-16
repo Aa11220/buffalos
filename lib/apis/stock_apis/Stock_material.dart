@@ -14,13 +14,13 @@ final StockMaterialApiProvider = Provider<StockMaterialApi>((ref) {
 class StockMaterialApi {
   final String tokken;
   StockMaterialApi({required this.tokken});
-  Future<List<StockMaterial>> getStores(int fk_material_id) async {
+  Future<List<StockMaterial>> getStores(int fkMaterialId) async {
     List<StockMaterial> list = [];
     final url = Uri.http(
         baseUrl,
         "/Admin/GetStockBalancebyItem",
-        fk_material_id != 0
-            ? {"userQuery": "fk_store_id=$fk_material_id"}
+        fkMaterialId != 0
+            ? {"userQuery": "fk_store_id=$fkMaterialId"}
             : {});
     final response = await http.get(url,
         headers: {"Accept": "text/plain", 'Authorization': 'Bearer $tokken'});

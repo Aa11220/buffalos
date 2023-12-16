@@ -15,10 +15,10 @@ final StockStoreApiProvider = Provider<StockStoreApi>((ref) {
 class StockStoreApi {
   final String tokken;
   StockStoreApi({required this.tokken});
-  Future<List<StockStore>> getStores(int fk_store_id) async {
+  Future<List<StockStore>> getStores(int fkStoreId) async {
     List<StockStore> list = [];
     final url = Uri.http(baseUrl, "Admin/GetStockBalancebyItem",
-        {"userQuery": "fk_store_id=$fk_store_id"});
+        {"userQuery": "fk_store_id=$fkStoreId"});
     final response = await http.get(url,
         headers: {"Accept": "text/plain", 'Authorization': 'Bearer $tokken'});
     final bodylist = jsonDecode(response.body);

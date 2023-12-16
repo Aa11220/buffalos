@@ -8,97 +8,99 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
 
 class PDFUtils {
-  static Future<File> generatepdf({
-    required String id,
-    required String Starttime,
-    required String name,
-    required String order,
-    required String Totalorder,
-    required String Discount,
-    required String orderdDiscounted,
-    required String Rcount,
-    required String Total,
-    required String NetOrder,
-  }) async {
+  static Future<File> generatepdf(
+      {required String id,
+      required String Starttime,
+      required String name,
+      required String order,
+      required String Totalorder,
+      required String Discount,
+      required String orderdDiscounted,
+      required String Rcount,
+      required String Total,
+      required String NetOrder,
+      required String tottalcash,
+      required String Total_Card,
+      required String Total_Companies}) async {
     final pdf = pw.Document();
     final image =
         (await rootBundle.load("assets/img/image005.png")).buffer.asUint8List();
     pdf.addPage(pw.MultiPage(
       build: (context) => <pw.Widget>[
         pw.Image(pw.MemoryImage(image), width: 150),
-        pw.Text('Shift iD : $id', style: pw.TextStyle(fontSize: 25)),
-        pw.Text('Start Time : $Starttime', style: pw.TextStyle(fontSize: 25)),
-        pw.Text('Employee Name : $name', style: pw.TextStyle(fontSize: 25)),
+        pw.Text('Shift iD : $id', style: const pw.TextStyle(fontSize: 25)),
+        pw.Text('Start Time : $Starttime', style: const pw.TextStyle(fontSize: 25)),
+        pw.Text('Employee Name : $name', style: const pw.TextStyle(fontSize: 25)),
         pw.SizedBox(height: 20),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Order', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(order, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Order', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(order, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Total Order', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(Totalorder, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Total Order', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Totalorder, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Discount', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(Discount, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Discount', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Discount, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
             pw.Text('Total order after discount',
-                style: pw.TextStyle(fontSize: 25)),
-            pw.Text(orderdDiscounted, style: pw.TextStyle(fontSize: 25)),
+                style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(orderdDiscounted, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Return count', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(Rcount, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Return count', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Rcount, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Total Return', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(Total, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Total Return', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Total, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Net order', style: pw.TextStyle(fontSize: 25)),
-            pw.Text(NetOrder, style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Net order', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(NetOrder, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Start Time : id', style: pw.TextStyle(fontSize: 25)),
-            pw.Text('Employee Name : id', style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Total cash', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(tottalcash, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Start Time : id', style: pw.TextStyle(fontSize: 25)),
-            pw.Text('Employee Name : id', style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Total Card', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Total_Card, style: const pw.TextStyle(fontSize: 25)),
           ],
         ),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Start Time : id', style: pw.TextStyle(fontSize: 25)),
-            pw.Text('Employee Name : id', style: pw.TextStyle(fontSize: 25)),
+            pw.Text('Total Companies', style: const pw.TextStyle(fontSize: 25)),
+            pw.Text(Total_Companies, style: const pw.TextStyle(fontSize: 25)),
           ],
         )
       ],

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../Featuers/Products/widget/ingrediants.dart';
 import '../utility/contants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;

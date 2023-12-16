@@ -1,4 +1,5 @@
-import 'package:buffalos/Featuers/report/views/safeBalanceScreen.dart';
+import '../../Featuers/purchaes/Views/PurchaseDataScreen.dart';
+import '../../Featuers/report/views/safeBalanceScreen.dart';
 
 import '../../Featuers/EndShift/view/End_Shift_Screen.dart';
 import '../../Featuers/report/views/StockBalanceview.dart';
@@ -13,21 +14,28 @@ class MyDrawer extends StatelessWidget {
         children: [
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed(StockBalance.path);
+              Navigator.of(context).pushReplacementNamed(StockBalance.path);
             },
-            title: Text("StockBalance"),
+            title: const Text("StockBalance"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed(EndShift.endpath);
+              Navigator.of(context).pushReplacementNamed(EndShift.endpath);
             },
-            title: Text("End Shift"),
+            title: const Text("End Shift"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed(SafeDataScreen.path);
+              Navigator.of(context).pushReplacementNamed(SafeDataScreen.path);
             },
-            title: Text("safe Data"),
+            title: const Text("safe Data"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(PurchaseDataScreen.path);
+            },
+            title: const Text("Purchase Data"),
           ),
         ],
       ),

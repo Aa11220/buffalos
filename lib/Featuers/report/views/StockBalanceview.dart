@@ -59,7 +59,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
             context,
           ),
           body: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +84,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                         });
                       },
                       value: _stock,
-                      title: Text(
+                      title: const Text(
                         "Filtter by Material",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
@@ -104,7 +104,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                       });
                     },
                     value: _Material,
-                    title: Text("Filtter by stock",
+                    title: const Text("Filtter by stock",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
                   ),
                   if (_Material)
@@ -114,7 +114,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                           Row(
                             children: [
                               Container(
-                                margin: EdgeInsets.only(left: 20),
+                                margin: const EdgeInsets.only(left: 20),
                                 width: MediaQuery.of(context).size.width * .3,
                                 child: GestureDetector(
                                   onTap: () => store.clear(),
@@ -166,7 +166,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text(name)
@@ -174,11 +174,11 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                           ),
                           if (_selected)
                             Container(
-                              margin: EdgeInsets.only(top: 12),
+                              margin: const EdgeInsets.only(top: 12),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
+                                    const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
@@ -222,15 +222,16 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                           itemBuilder: (context, index) {
                                             return Container(
                                               color: Colors.white,
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 2),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
                                               child: Row(
                                                 children: [
                                                   Expanded(
                                                       child: Text(
                                                           materials[index]
                                                               .MaterialName)),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 5,
                                                   ),
                                                   Expanded(
@@ -265,7 +266,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                         Row(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(left: 20),
+                              margin: const EdgeInsets.only(left: 20),
                               width: MediaQuery.of(context).size.width * .3,
                               child: TypeAheadField<ma.Material>(
                                 // suggestionsBoxController: enditcategory,
@@ -315,7 +316,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                 },
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(name)
@@ -323,11 +324,11 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                         ),
                         if (_selected)
                           Container(
-                            margin: EdgeInsets.only(top: 12),
+                            margin: const EdgeInsets.only(top: 12),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                  const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
@@ -355,9 +356,9 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                       itemBuilder: (context, index) {
                                         return Container(
                                           color: Colors.white,
-                                          margin:
-                                              EdgeInsets.symmetric(vertical: 2),
-                                          padding: EdgeInsets.symmetric(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
                                               vertical: 5, horizontal: 2),
                                           child: Row(
                                             children: [

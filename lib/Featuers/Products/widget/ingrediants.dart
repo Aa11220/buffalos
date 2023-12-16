@@ -1,11 +1,10 @@
-import '../Controller/ingredControllrt.dart';
-import '../Views/addingred.dart';
-import '../../../models/ingediants.dart';
-import '../../../providers/igrediantsprovider.dart';
-
-import '../../../models/Note.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../models/ingediants.dart';
+import '../../../providers/igrediantsprovider.dart';
+import '../Controller/ingredControllrt.dart';
+import '../Views/addingred.dart';
 
 class igrediants extends ConsumerStatefulWidget {
   const igrediants(
@@ -69,9 +68,9 @@ class _NoteandingredientState extends ConsumerState<igrediants> {
                   ),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 "Add ingrediant",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
             for (ingrediants i in alllist)

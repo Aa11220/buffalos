@@ -47,7 +47,7 @@ class _addnoteState extends ConsumerState<addnote> {
           builder: (context, ref, child) {
             return Scaffold(
                 drawer: MyDrawer(context),
-                appBar: const Customappbar(text: "Notes"),
+                appBar: Customappbar(text: "Notes"),
                 body: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

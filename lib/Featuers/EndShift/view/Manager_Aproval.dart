@@ -1,19 +1,34 @@
-import 'package:buffalos/utility/commonwidget/appbar.dart';
-import 'package:buffalos/utility/commonwidget/drawer.dart';
+import '../../../utility/commonwidget/appbar.dart';
+import '../../../utility/commonwidget/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../apis/EndShift/EndShift.dart';
 import '../../../utility/lineargragr.dart';
+import '../Controller/UserApproval.dart';
 
-class MangerAproval extends StatefulWidget {
+class MangerAproval extends ConsumerStatefulWidget {
   const MangerAproval({super.key});
   static const path = "/MangerAproval";
 
   @override
-  State<MangerAproval> createState() => _MangerAprovalState();
+  ConsumerState<MangerAproval> createState() => _MangerAprovalState();
 }
 
-class _MangerAprovalState extends State<MangerAproval> {
+bool frist = true;
+int? arguments;
+
+class _MangerAprovalState extends ConsumerState<MangerAproval> {
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (frist) {
+      arguments = (ModalRoute.of(context)?.settings.arguments) as int;
+      frist = false;
+    }
+    super.didChangeDependencies();
+  }
+
   var loading = false;
   String _email = "";
   String _password = "";
@@ -25,9 +40,17 @@ class _MangerAprovalState extends State<MangerAproval> {
       setState(() {
         loading = true;
       });
-      // await ref
-      //     .read(loginControllerProvider)
-      //     .signincont(_email, _password, context);
+      final me = await ref
+          .read(UserApprovalControllerProvider)
+          .getUserApprovals(_email, _password, context);
+      if (me["Condition"]) {
+        print("exit");
+        await ref
+            .read(EndShittoApiProvider)
+            .ChangeShift(arguments!, me["Value"]);
+        Navigator.popUntil(context, ModalRoute.withName("/product"));
+      }
+
       setState(() {
         loading = false;
       });
@@ -218,7 +241,9 @@ class _MangerAprovalState extends State<MangerAproval> {
                                                               Colors.white,
                                                           splashFactory: NoSplash
                                                               .splashFactory),
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        save();
+                                                      },
                                                       child: const Text(
                                                           "Approval"),
                                                     ),

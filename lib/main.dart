@@ -1,6 +1,8 @@
-import 'package:buffalos/Featuers/EndShift/view/End_Shift_Screen.dart';
-import 'package:buffalos/Featuers/EndShift/view/Manager_Aproval.dart';
+import 'Featuers/EndShift/view/End_Shift_Screen.dart';
+import 'Featuers/EndShift/view/Manager_Aproval.dart';
 
+import 'Featuers/purchaes/Views/AddRawMaterialScreen.dart';
+import 'Featuers/purchaes/Views/PurchaseDataScreen.dart';
 import 'Featuers/report/views/StockBalanceview.dart';
 
 import 'Featuers/Products/Views/addnote.dart';
@@ -44,10 +46,12 @@ class MyApp extends StatelessWidget {
         addnote.path: (context) => const addnote(),
         productPage.path: (context) => const productPage(),
         addandsave.path: (context) => const addandsave(),
-        StockBalance.path: (context) => StockBalance(),
-        MangerAproval.path: (context) => MangerAproval(),
-        EndShift.endpath: (context) => EndShift(),
-        SafeDataScreen.path: (context) => SafeDataScreen(),
+        StockBalance.path: (context) => const StockBalance(),
+        MangerAproval.path: (context) => const MangerAproval(),
+        EndShift.endpath: (context) => const EndShift(),
+        SafeDataScreen.path: (context) => const SafeDataScreen(),
+        PurchaseDataScreen.path: (context) => const PurchaseDataScreen(),
+        AddRawMaterialScreen.path: (context) => const AddRawMaterialScreen(),
         '/test': (context) => const done(),
       },
     );

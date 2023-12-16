@@ -12,9 +12,9 @@ class StockStoreController {
   final StockStoreApi api;
 
   StockStoreController({required this.api});
-  Future<List<StockStore>> getStockStore(int? fk_store_id) async {
-    if (fk_store_id != null) {
-      final List = await api.getStores(fk_store_id);
+  Future<List<StockStore>> getStockStore(int? fkStoreId) async {
+    if (fkStoreId != null) {
+      final List = await api.getStores(fkStoreId);
       return List;
     }
     return [];

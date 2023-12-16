@@ -7,10 +7,10 @@ class CommonRow extends StatelessWidget {
   final String value2;
   const CommonRow({
     super.key,
-    required String this.lable1,
-    required String this.lable2,
-    required String this.Value1,
-    required String this.value2,
+    required this.lable1,
+    required this.lable2,
+    required this.Value1,
+    required this.value2,
   });
 
   @override
@@ -27,7 +27,7 @@ class CommonRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               height: 35,
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               child: Center(child: Text(Value1)),
             ),
           ),
@@ -39,7 +39,7 @@ class CommonRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               height: 35,
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               child: Center(child: Text(value2)),
             ),
           ),

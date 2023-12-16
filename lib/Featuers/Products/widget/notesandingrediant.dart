@@ -1,9 +1,9 @@
-import '../Controller/NoteController.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/Note.dart';
 import '../../../providers/noteprovider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../Controller/NoteController.dart';
 
 class Noteandingredient extends ConsumerStatefulWidget {
   const Noteandingredient(
@@ -71,9 +71,9 @@ class _NoteandingredientState extends ConsumerState<Noteandingredient> {
                   ),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 "Add Note",
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
             for (Note i in /*ref.watch(notelistProvider)*/ _text)

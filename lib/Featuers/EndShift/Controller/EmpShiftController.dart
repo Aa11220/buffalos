@@ -1,4 +1,4 @@
-import 'package:buffalos/apis/EmpForEndShift/EmpEndShiftAPi.dart';
+import '../../../apis/EmpForEndShift/EmpEndShiftAPi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +24,7 @@ class EndShiftController {
         showAdaptiveDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
+            return const AlertDialog(
               title: Text("Error happened"),
             );
           },

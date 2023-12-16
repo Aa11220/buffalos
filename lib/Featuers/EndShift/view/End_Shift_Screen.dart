@@ -1,22 +1,21 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:buffalos/utility/pdf/Pdf_api.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import '../../../utility/pdf/Pdf_api.dart';
 
-import 'package:buffalos/Featuers/EndShift/Widget/Common_Row.dart';
-import 'package:buffalos/Featuers/EndShift/view/Manager_Aproval.dart';
+import '../Widget/Common_Row.dart';
+import 'Manager_Aproval.dart';
 
-import 'package:buffalos/models/EmpDataModule.dart';
-import 'package:buffalos/models/EmpEndShift.dart';
-import 'package:buffalos/utility/commonwidget/appbar.dart';
-import 'package:buffalos/utility/commonwidget/drawer.dart';
-import 'package:buffalos/utility/lineargragr.dart';
+import '../../../models/EmpDataModule.dart';
+import '../../../models/EmpEndShift.dart';
+import '../../../utility/commonwidget/appbar.dart';
+import '../../../utility/commonwidget/drawer.dart';
+import '../../../utility/lineargragr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../../apis/Emails/SendEmail.dart';
+import '../Controller/EmailDataController.dart';
 import '../Controller/EmpDataApi.dart';
 import '../Controller/EmpShiftController.dart';
 
@@ -30,11 +29,12 @@ class EndShift extends ConsumerStatefulWidget {
 
 int? id;
 String? name;
+int? emp_id;
 
 EmpData? data;
 
 class _EndShiftState extends ConsumerState<EndShift> {
-  GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final Employeetextcontroller = TextEditingController();
   @override
   void deactivate() {
@@ -49,21 +49,32 @@ class _EndShiftState extends ConsumerState<EndShift> {
     super.dispose();
   }
 
-  void onsavepdf() async {
+  void onsavepdf(bool send) async {
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
 
-      // final pdffile = await PDFUtils.generatepdf(
-      //   id: (id ?? "").toString(),
-      //   Starttime: data!.StartTime ?? "",
-      //   name: name ?? "",
-      //   Discount: (data!.TotalAfterDiscount ?? "").toString(),
-      //   NetOrder: (data!.NetCash ?? "").toString(),
-      //   Rcount: (data!.returncount ?? "").toString(),
-      //   order: (data!.ordercount ?? "").toString(),
-      //   Total: data!.
-      // );
-      // PDFUtils.openFile(pdffile);
+      final pdffile = await PDFUtils.generatepdf(
+          id: (id ?? "").toString(),
+          Starttime: data!.StartTime ?? "",
+          name: name ?? "",
+          Discount: (data!.Discount ?? "").toString(),
+          NetOrder: (data!.NetCash ?? "").toString(),
+          Rcount: (data!.returncount ?? "").toString(),
+          order: (data!.ordercount ?? "").toString(),
+          Total: (data!.returnedvalue ?? "").toString(),
+          Totalorder: (data!.price ?? "").toString(),
+          orderdDiscounted: (data!.price ?? "").toString(),
+          tottalcash: (data!.Cashprice ?? "").toString(),
+          Total_Card: (data!.Visaprice ?? "").toString(),
+          Total_Companies: (data!.Componyprice ?? "").toString());
+
+      if (send == true) {
+        final list = await ref.read(EmailToControllerProvider).getall(context);
+        await ref.read(SendEmailApiProvider).addfile(pdffile, "welcom", list);
+        print("object");
+      } else {
+        PDFUtils.openFile(pdffile);
+      }
     }
   }
 
@@ -77,12 +88,12 @@ class _EndShiftState extends ConsumerState<EndShift> {
           gradient: linear,
         ),
         child: Scaffold(
-          appBar: Customappbar(
+          appBar:  Customappbar(
             text: "End Shift",
           ),
           drawer: MyDrawer(context),
           body: Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 15,
               horizontal: 5,
             ),
@@ -95,6 +106,7 @@ class _EndShiftState extends ConsumerState<EndShift> {
                     key: _key,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * .4,
+                      height: 45,
                       child: TypeAheadFormField<EmpEndShift>(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -107,7 +119,7 @@ class _EndShiftState extends ConsumerState<EndShift> {
                               Employeetextcontroller.clear();
                             },
                             controller: Employeetextcontroller,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "Employee",
                                 suffixIcon: Icon(Icons.keyboard_arrow_down)),
                           ),
@@ -126,6 +138,7 @@ class _EndShiftState extends ConsumerState<EndShift> {
                             Employeetextcontroller.text = suggestion.EmpName;
                             id = suggestion.PK_Shift_ID;
                             name = suggestion.EmpName;
+                            emp_id = suggestion.FK_EmpID;
 
                             data = await ref
                                 .read(EmpDataControllerProvider)
@@ -227,23 +240,30 @@ class _EndShiftState extends ConsumerState<EndShift> {
                           flex: 2,
                           child: ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(MangerAproval.path);
+                                if (_key.currentState!.validate()) {
+                                  _key.currentState!.save();
+                                  Navigator.of(context).pushNamed(
+                                      MangerAproval.path,
+                                      arguments: emp_id);
+                                }
                               },
-                              child: Text("Manager Aproval"))),
+                              child: const Text("Manager Aproval"))),
                       Flexible(
                           fit: FlexFit.tight,
                           flex: 1,
                           child: ElevatedButton(
                               onPressed: () {
-                                onsavepdf();
+                                onsavepdf(false);
                               },
-                              child: Text("PDF"))),
+                              child: const Text("PDF"))),
                       Flexible(
                           fit: FlexFit.tight,
                           flex: 2,
                           child: ElevatedButton(
-                              onPressed: () {}, child: Text("Send PDF"))),
+                              onPressed: () {
+                                onsavepdf(true);
+                              },
+                              child: const Text("Send PDF"))),
                     ],
                   )
                 ],

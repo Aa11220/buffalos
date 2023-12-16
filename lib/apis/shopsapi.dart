@@ -35,7 +35,7 @@ class StoressApi {
         list.add(Stores.fromMap(element));
       }
       return list;
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
   }
