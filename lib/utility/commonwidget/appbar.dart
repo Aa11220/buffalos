@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Customappbar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
-  bool image;
+  final bool image;
   Customappbar({super.key, required this.text, this.image = true});
   @override
   Widget build(BuildContext context) {

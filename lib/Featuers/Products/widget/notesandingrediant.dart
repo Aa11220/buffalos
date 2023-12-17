@@ -23,7 +23,6 @@ late List<Note> _text;
 late List<Note> _hold;
 
 class _NoteandingredientState extends ConsumerState<Noteandingredient> {
-  @override
   void getlistfromapi() async {
     print("object");
     _hold = await ref.read(NoteControerProvider).getAll(widget.itemid);

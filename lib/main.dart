@@ -1,6 +1,10 @@
+import 'package:buffalos/Featuers/Expensses/View/Expenses.dart';
+
 import 'Featuers/EndShift/view/End_Shift_Screen.dart';
 import 'Featuers/EndShift/view/Manager_Aproval.dart';
 
+import 'Featuers/SafeTransfer/View/SafeTransferScree.dart';
+import 'Featuers/Supplier/view/Supplier.dart';
 import 'Featuers/purchaes/Views/AddRawMaterialScreen.dart';
 import 'Featuers/purchaes/Views/PurchaseDataScreen.dart';
 import 'Featuers/report/views/StockBalanceview.dart';
@@ -52,6 +56,9 @@ class MyApp extends StatelessWidget {
         SafeDataScreen.path: (context) => const SafeDataScreen(),
         PurchaseDataScreen.path: (context) => const PurchaseDataScreen(),
         AddRawMaterialScreen.path: (context) => const AddRawMaterialScreen(),
+        EpensesScreen.path: (context) => const EpensesScreen(),
+        SupplierScreen.path: (context) => const SupplierScreen(),
+        SafeTransferScreen.path: (context) => const SafeTransferScreen(),
         '/test': (context) => const done(),
       },
     );

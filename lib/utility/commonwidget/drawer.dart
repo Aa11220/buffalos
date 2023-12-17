@@ -1,3 +1,6 @@
+import '../../Featuers/Expensses/View/Expenses.dart';
+import '../../Featuers/SafeTransfer/View/SafeTransferScree.dart';
+import '../../Featuers/Supplier/view/Supplier.dart';
 import '../../Featuers/purchaes/Views/PurchaseDataScreen.dart';
 import '../../Featuers/report/views/safeBalanceScreen.dart';
 
@@ -36,6 +39,25 @@ class MyDrawer extends StatelessWidget {
                   .pushReplacementNamed(PurchaseDataScreen.path);
             },
             title: const Text("Purchase Data"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(EpensesScreen.path);
+            },
+            title: const Text("Expenses"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(SupplierScreen.path);
+            },
+            title: const Text("Supplier"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(SafeTransferScreen.path);
+            },
+            title: const Text("Safe Transfer"),
           ),
         ],
       ),
