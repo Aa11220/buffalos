@@ -41,6 +41,16 @@ class SupllierModule {
     };
   }
 
+  Map<String, dynamic> toMapsend() {
+    return <String, dynamic>{
+      'supplierName': supplierName,
+      'supplierAddress': supplierAddress,
+      'supplierTel': supplierTel,
+      'balance': balance,
+      "toJsonsend": balance
+    };
+  }
+
   factory SupllierModule.fromMap(Map<String, dynamic> map) {
     return SupllierModule(
       pkSupplierId:
@@ -57,6 +67,7 @@ class SupllierModule {
   }
 
   String toJson() => json.encode(toMap());
+  String toJsonsend() => json.encode(toMapsend());
 
   factory SupllierModule.fromJson(String source) =>
       SupllierModule.fromMap(json.decode(source) as Map<String, dynamic>);

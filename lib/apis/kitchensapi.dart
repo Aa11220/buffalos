@@ -74,6 +74,7 @@ class kitchenapi {
             'Authorization': 'Bearer $tokken'
           },
           body: jsonEncode({"areaName": name}));
+          
       final responsejson = jsonDecode(response.body);
       print(responsejson);
       final id = responsejson["rs"]["pkPrepareId"];

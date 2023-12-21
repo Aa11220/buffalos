@@ -7,6 +7,7 @@ class user {
   final String emp_ProfilePic;
   final int fkSafeId;
   final int pkEmpId;
+  final int shiftID;
 
   user({
     required this.token,
@@ -14,6 +15,7 @@ class user {
     required this.emp_ProfilePic,
     required this.fkSafeId,
     required this.pkEmpId,
+    required this.shiftID,
   });
 
   user copyWith({
@@ -29,6 +31,7 @@ class user {
       emp_ProfilePic: emp_ProfilePic ?? this.emp_ProfilePic,
       fkSafeId: fkSafeId ?? this.fkSafeId,
       pkEmpId: pkEmpId ?? this.pkEmpId,
+      shiftID: shiftID,
     );
   }
 
@@ -44,12 +47,12 @@ class user {
 
   factory user.fromMap(Map<String, dynamic> map) {
     return user(
-      token: map["rs"]['token'] as String,
-      userName: map["rs"]["employee"]['userName'] as String,
-      emp_ProfilePic: map["rs"]["employee"]['emp_ProfilePic'] as String,
-      fkSafeId: map["rs"]["employee"]['fkSafeId'] as int,
-      pkEmpId: map["rs"]["employee"]['pkEmpId'] as int,
-    );
+        token: map["rs"]['token'] as String,
+        userName: map["rs"]["employee"]['userName'] as String,
+        emp_ProfilePic: map["rs"]["employee"]['emp_ProfilePic'] as String,
+        fkSafeId: map["rs"]["employee"]['fkSafeId'] as int,
+        pkEmpId: map["rs"]["employee"]['pkEmpId'] as int,
+        shiftID: map["rs"]["shiftID"] as int);
   }
 
   String toJson() => json.encode(toMap());
@@ -82,4 +85,3 @@ class user {
         pkEmpId.hashCode;
   }
 }
-

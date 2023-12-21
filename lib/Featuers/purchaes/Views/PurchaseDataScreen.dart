@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:buffalos/Featuers/purchaes/Controller/SupplierController/SupplierController.dart';
+import 'package:buffalos/apis/userapi.dart';
 import 'package:buffalos/utility/commonwidget/appbar.dart';
 import 'package:buffalos/utility/commonwidget/drawer.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,9 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
+import '../../../apis/SafeData/SafeEpress.dart';
 import '../../../models/Supplier/SupplierModule.dart';
+import '../../../providers/fileProvider.dart';
+import '../../../providers/purchdataprovider.dart';
 import '../../../utility/lineargragr.dart';
-import '../Controller/safeController.dart';
 import '../Controller/storeController.dart';
 import 'AddRawMaterialScreen.dart';
 
@@ -62,13 +65,50 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
     }
   }
 
+  int? fkSupplierId;
+  String? billNo;
+  int? fkStoreId;
+  String? pay;
+  int? safeid;
+
   void pickfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       _selectedFile = File(result.files.single.path!);
-
+      ref.read(filenotifierProvider.notifier).setfile(_selectedFile!);
+      ;
       setState(() {});
     } else {}
+  }
+
+  void onsave() {
+    if (_key.currentState!.validate()) {
+      _key.currentState!.save();
+      if (_selectedDate != null) {
+        final shiftid = ref.read(authprovider).logedin.shiftID;
+        final pkBuyingId = 0;
+
+//fkSupplierId
+// billNo
+        final date = DateFormat("yyyy-MM-dd").format(_selectedDate!);
+        final bool payment = (pay) == "Cash" ? false : true;
+
+        ref.read(purchasedataProvider.notifier).setData(
+            fK_Shift_ID: shiftid,
+            pkBuyingId: pkBuyingId,
+            fkSupplierId: fkSupplierId,
+            billNo: billNo,
+            date: date,
+            payment: payment,
+            fkStoreId: fkStoreId,
+            fkSafeId: safeid);
+        print(ref.read(purchasedataProvider).toMap());
+        Navigator.of(context).pushNamed(AddRawMaterialScreen.path);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Select date")));
+      }
+    }
   }
 
   var _key = GlobalKey<FormState>();
@@ -104,6 +144,12 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           height: 15,
                         ),
                         TypeAheadFormField<SupllierModule>(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter something";
+                            }
+                            return null;
+                          },
                           suggestionsBoxController: namebox,
                           textFieldConfiguration: TextFieldConfiguration(
                             onTap: () => name.clear(),
@@ -130,6 +176,7 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                             });
                           },
                           onSuggestionSelected: (suggestion) {
+                            fkSupplierId = suggestion.pkSupplierId;
                             name.text = suggestion.supplierName!;
                           },
                         ),
@@ -141,6 +188,13 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           height: 15,
                         ),
                         TextFormField(
+                          onSaved: (newValue) => billNo = newValue,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter something";
+                            }
+                            return null;
+                          },
                           controller: Number,
                           decoration: InputDecoration(
                               hintText: "Enter Invoice Number..."),
@@ -154,6 +208,12 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           height: 15,
                         ),
                         TypeAheadFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter something";
+                            }
+                            return null;
+                          },
                           suggestionsBoxController: shopname,
                           textFieldConfiguration: TextFieldConfiguration(
                             onTap: () => Shopsname.clear(),
@@ -179,6 +239,8 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                             });
                           },
                           onSuggestionSelected: (suggestion) {
+                            fkStoreId = suggestion.pkStoreId;
+                            print(fkStoreId);
                             Shopsname.text = suggestion.storeName!;
                           },
                         ),
@@ -263,6 +325,15 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           height: 15,
                         ),
                         TypeAheadFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter something";
+                            }
+                            return null;
+                          },
+                          onSaved: (newValue) {
+                            pay = newValue;
+                          },
                           direction: AxisDirection.up,
                           suggestionsBoxController: paymentbox,
                           textFieldConfiguration: TextFieldConfiguration(
@@ -287,6 +358,12 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           height: 15,
                         ),
                         TypeAheadFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter something";
+                            }
+                            return null;
+                          },
                           suggestionsBoxController: safebox,
                           textFieldConfiguration: TextFieldConfiguration(
                             onTap: () => safe.clear(),
@@ -298,18 +375,21 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                           direction: AxisDirection.up,
                           itemBuilder: (context, itemData) => SizedBox(
                               height: 50,
-                              child: Center(child: Text(itemData.SafeName!))),
+                              child: Center(child: Text(itemData.safeName!))),
                           suggestionsCallback: (pattern) async {
-                            final _list =
-                                await ref.read(SafeControllerProvider).getall();
+                            final _list = await ref
+                                .read(SafeDataExpressApiProvider)
+                                .getsafeData();
+
                             return _list.where((element) {
-                              return element.SafeName!
+                              return element.safeName!
                                   .toLowerCase()
                                   .contains(pattern.toLowerCase());
                             });
                           },
                           onSuggestionSelected: (suggestion) {
-                            safe.text = suggestion.SafeName!;
+                            safeid = suggestion.fkSafeId;
+                            safe.text = suggestion.safeName!;
                           },
                         ),
                         SizedBox(
@@ -318,8 +398,7 @@ class _PurchaseDataScreenState extends ConsumerState<PurchaseDataScreen> {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(AddRawMaterialScreen.path);
+                              onsave();
                             },
                             child: Text("Next"),
                           ),

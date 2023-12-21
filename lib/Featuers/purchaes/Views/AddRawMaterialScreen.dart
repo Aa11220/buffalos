@@ -1,11 +1,21 @@
+import 'dart:io';
+
 import 'package:buffalos/Featuers/Products/Controller/Materialcontroller.dart';
+import 'package:buffalos/Featuers/Products/Views/productspage.dart';
+import 'package:buffalos/models/mm.dart';
+import 'package:buffalos/providers/materialProvider.dart';
+import 'package:buffalos/providers/mmprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import '../../../apis/PurchaseApi.dart';
 import '../../../models/Material.dart' as ma;
+import '../../../providers/fileProvider.dart';
+import '../../../providers/purchdataprovider.dart';
 import '../../../utility/commonwidget/appbar.dart';
 import '../../../utility/commonwidget/drawer.dart';
 import '../../../utility/lineargragr.dart';
+import '../widgets/CustomCard.dart';
 
 class AddRawMaterialScreen extends ConsumerStatefulWidget {
   const AddRawMaterialScreen({super.key});
@@ -18,9 +28,25 @@ class AddRawMaterialScreen extends ConsumerStatefulWidget {
 
 class _AddRawMaterialScreenState extends ConsumerState<AddRawMaterialScreen> {
   SuggestionsBoxController select = SuggestionsBoxController();
-
-  List<ma.Material> list = [];
+  double? a;
+  List<mm> tosend = [];
   TextEditingController material = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    ref.invalidate(purchasedataProvider);
+    ref.invalidate(mmProvider);
+    ref.invalidate(itemsProvid);
+    ref.invalidate(filenotifierProvider);
+    super.deactivate();
+  }
+
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,27 +90,87 @@ class _AddRawMaterialScreenState extends ConsumerState<AddRawMaterialScreen> {
                         child: Center(child: Text(itemData.materialName!))),
                     onSuggestionSelected: (suggestion) {
                       material.text = suggestion.materialName!;
+                      ref.read(itemsProvid).add(suggestion);
+                      ref.read(mmProvider.notifier).add(suggestion.fkUnitId!);
                     },
                   ),
                 ),
-                list.isEmpty == true
-                    ? Expanded(child: Text("Select to add Raw Materials"))
-                    : Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Center(child: Text("me"));
-                          },
-                          itemCount: list.length,
-                        ),
-                      ),
-                Container(
-                  color: Colors.white,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("Total: 0.0"),
-                        ElevatedButton(onPressed: () {}, child: Text("Save"))
-                      ]),
+                Consumer(
+                  builder: (context, ref, child) {
+                    List<ma.Material> list = ref.watch(itemsProvid);
+
+                    return list.isEmpty == true
+                        ? Expanded(child: Text("Select to add Raw Materials"))
+                        : Expanded(
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                return CustomCard(
+                                  material: list[index],
+                                  index: index,
+                                );
+                              },
+                              itemCount: list.length,
+                            ),
+                          );
+                  },
+                ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final c = ref.watch(mmProvider);
+                    return Container(
+                      color: Colors.white,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text("Total is : " + ((c.total)).toString()),
+                            isloading == true
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        isloading = true;
+                                      });
+                                      ref
+                                          .read(purchasedataProvider.notifier)
+                                          .setData(
+                                              totalPrice:
+                                                  ref.read(mmProvider).total,
+                                              buyMaterialDetails:
+                                                  ref.read(mmProvider).mylist);
+                                      final kk = await ref
+                                          .read(PurchaseApiProvider)
+                                          .sendPurchase(
+                                              ref.read(purchasedataProvider));
+                                      print(ref
+                                          .read(purchasedataProvider)
+                                          .toMap());
+                                      if (ref.read(filenotifierProvider) !=
+                                          null) {
+                                        File file = ref
+                                            .read(filenotifierProvider.notifier)
+                                            .send();
+                                        ref
+                                            .read(PurchaseApiProvider)
+                                            .addfile(file, kk.toString());
+                                        print("done");
+                                      }
+                                      ref.invalidate(purchasedataProvider);
+                                      ref.invalidate(mmProvider);
+                                      ref.invalidate(itemsProvid);
+                                      ref.invalidate(filenotifierProvider);
+                                      setState(() {
+                                        isloading = false;
+                                      });
+                                      Navigator.of(context).popUntil(
+                                          ModalRoute.withName(
+                                              productPage.path));
+                                    },
+                                    child: Text("Save"))
+                          ]),
+                    );
+                  },
                 )
               ]),
             ),

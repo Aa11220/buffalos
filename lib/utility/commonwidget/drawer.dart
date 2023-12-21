@@ -17,45 +17,51 @@ class MyDrawer extends StatelessWidget {
         children: [
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(StockBalance.path);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(StockBalance.path);
             },
             title: const Text("StockBalance"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(EndShift.endpath);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(EndShift.endpath);
             },
             title: const Text("End Shift"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(SafeDataScreen.path);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(SafeDataScreen.path);
             },
             title: const Text("safe Data"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(PurchaseDataScreen.path);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(PurchaseDataScreen.path);
             },
             title: const Text("Purchase Data"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(EpensesScreen.path);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(EpensesScreen.path);
             },
             title: const Text("Expenses"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(SupplierScreen.path);
+              Navigator.of(context).pop();
+
+              Navigator.of(context).pushNamed(SupplierScreen.path);
             },
             title: const Text("Supplier"),
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(SafeTransferScreen.path);
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(SafeTransferScreen.path);
             },
             title: const Text("Safe Transfer"),
           ),

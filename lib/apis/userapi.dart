@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import '../models/user.dart';
 import '../utility/Failuer.dart';
@@ -16,7 +17,12 @@ final authprovider = ChangeNotifierProvider<userApi>((ref) {
 class userApi extends ChangeNotifier {
   bool loading = false;
   user logedin = user(
-      token: "", userName: "", emp_ProfilePic: "", fkSafeId: 0, pkEmpId: 0);
+      token: "",
+      userName: "",
+      emp_ProfilePic: "",
+      fkSafeId: 0,
+      pkEmpId: 0,
+      shiftID: 0);
   set setName(user name) {
     logedin = name;
     notifyListeners();
@@ -28,7 +34,9 @@ class userApi extends ChangeNotifier {
       final response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"username": User, "password": password}));
+
       final jsonbody = jsonDecode(response.body);
+
       final statuscode = jsonbody["sts"]["code"];
       if (statuscode == 200) {
         logedin = user.fromMap(jsonbody);

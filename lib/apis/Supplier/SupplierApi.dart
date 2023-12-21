@@ -39,4 +39,18 @@ class SupplierApi {
       rethrow;
     }
   }
+
+  void setsupplier(SupllierModule supp) async {
+    final url = Uri.http(baseUrl, "TblSupplier/save");
+    try {
+      await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $Tokken'
+          },
+          body: supp.toJsonsend());
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
