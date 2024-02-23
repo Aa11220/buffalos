@@ -1,16 +1,13 @@
-# buffalos
+# Buffalos
 
-A new Flutter project.
+This is Buffalos , It is an app to manage Restaurants , Stuff , safes and food items . The main goal of this project was to create a platform where Manager can easily Manage and Track the restaurant.
 
-## Getting Started
+## Why this project ?
 
-This project is a starting point for a Flutter application.
+This project is a Flutter application. help user to Manage his restaurant , by Seeing all the Items and suppliers that he has in his Restaurant, Adding new ones, Editing
 
-A few resources to get you started if this is your first Flutter project:
+it give manager ability to track stuff performance , and see generate reports as pdfs
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Screen                                                             | Description        |
+| ------------------------------------------------------------------ | ------------------ |
+| ![Login](Images_for_readme\Login_Screen\Screenshot_1708712835.png) | User login screen. |
