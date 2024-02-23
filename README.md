@@ -20,8 +20,69 @@ it give manager ability to track stuff performance , and see generate reports as
     
   </tr>
   <tr>
-    <td>Centro comercial Moctezuma</td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
+    <td> <img src="./Images_for_readme/Product_Page/Screenshot_1708712867.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
   </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
+    <td><strong>Login Screen</strong></td>
+    
+  </tr>
+
 </table>
