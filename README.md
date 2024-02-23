@@ -10,12 +10,18 @@ it give manager ability to track stuff performance , and see generate reports as
 
 <table>
   <tr>
-   <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/>
-
+    <th>Screen</th>
+    <th>Description</th>
+    
+  </tr>
+  <tr>
+    <td> <img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/></td>
     <td><strong>Login Screen</strong></td>
-
-   </tr> 
-   <tr>
-   
+    
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
   </tr>
 </table>
