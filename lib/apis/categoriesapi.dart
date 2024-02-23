@@ -40,4 +40,19 @@ class CategoriesApi {
       return [];
     }
   }
+
+  void addCategory(String name) async {
+    final url = Uri.http(baseUrl, "TblItemCategory/save");
+    try {
+      final responsee = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $tokken'
+          },
+          body: json.encode({"categoryName": name}));
+      print(responsee.body);
+    } catch (e) {
+      print("Error");
+    }
+  }
 }

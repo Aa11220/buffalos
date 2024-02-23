@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../models/Stock_Material.dart';
 import '../userapi.dart';
 import '../../utility/contants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,15 +16,15 @@ final StockStoreApiProvider = Provider<StockStoreApi>((ref) {
 class StockStoreApi {
   final String tokken;
   StockStoreApi({required this.tokken});
-  Future<List<StockStore>> getStores(int fkStoreId) async {
-    List<StockStore> list = [];
+  Future<List<StockMaterial>> getStores(int fkStoreId) async {
+    List<StockMaterial> list = [];
     final url = Uri.http(baseUrl, "Admin/GetStockBalancebyItem",
         {"userQuery": "fk_store_id=$fkStoreId"});
     final response = await http.get(url,
         headers: {"Accept": "text/plain", 'Authorization': 'Bearer $tokken'});
     final bodylist = jsonDecode(response.body);
     for (var elment in bodylist) {
-      list.add(StockStore.fromMap(elment));
+      list.add(StockMaterial.fromMap(elment));
     }
     return list;
   }

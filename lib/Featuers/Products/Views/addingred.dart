@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../models/Material.dart' as ma;
 import '../../../utility/lineargragr.dart';
-
+//Material=1 component
 class addIngredient extends ConsumerStatefulWidget {
   const addIngredient({super.key});
   static const path = "/addingred";
@@ -683,7 +683,7 @@ Future<void> _showdialolgmainsubcategory(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Disable'),
+                child: const Text('cancel'),
                 onPressed: () {
                   controller.text = "";
                   rawqunataty.text = "";
@@ -695,7 +695,7 @@ Future<void> _showdialolgmainsubcategory(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Enable'),
+                child: const Text('Save'),
                 onPressed: () {
                   int amount = int.tryParse(rawqunataty.text) ?? 0;
                   ma.Material k = ma.Material(
@@ -736,7 +736,7 @@ Future<void> _showunit(BuildContext context, TextEditingController addunit) {
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Disable'),
+                child: const Text('Cancel'),
                 onPressed: () {
                   addunit.text = "";
                   Navigator.of(context).pop();
@@ -746,7 +746,7 @@ Future<void> _showunit(BuildContext context, TextEditingController addunit) {
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Enable'),
+                child: const Text('Save'),
                 onPressed: () {
                   print(addunit.text);
                   ref.read(UnitControllerProvider).addunit(addunit.text);
@@ -846,6 +846,7 @@ Future<void> _showaddingrediennt(
                               ),
                             ],
                           ),
+                          SizedBox(width: 8,),
                           Column(
                             children: [
                               const Text("Quatatiy"),
@@ -991,7 +992,7 @@ Future<void> _showaddingrediennt(
                                                 Text(
                                                     list[index].MaterialName),
                                                 Text(
-                                                    "   qty:  ${list[index].Qty}     type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
+                                                    " type:  ${list[index].MatType[0] == "R" ? "M" : "C"} "),
                                               ],
                                             ),
                                           ),
@@ -1029,7 +1030,7 @@ Future<void> _showaddingrediennt(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Disable'),
+                child: const Text('cancel'),
                 onPressed: () {
                   caddname.text = "";
                   caddquant.text = "";
@@ -1044,7 +1045,7 @@ Future<void> _showaddingrediennt(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Enable'),
+                child: const Text('save'),
                 onPressed: () {
                   // final item = Componnent(
                   //     fK_Unit_ID: id,

@@ -31,6 +31,7 @@ class userApi extends ChangeNotifier {
   futuerorfaluer<user> signin(String User, String password) async {
     final url = Uri.http(baseUrl, "/Login");
     try {
+      print(url);
       final response = await http.post(url,
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({"username": User, "password": password}));
@@ -51,7 +52,9 @@ class userApi extends ChangeNotifier {
         );
       }
     } catch (e, StackTrace) {
-      return left(Faliuer(message: "Error happened", stacktrace: StackTrace));
+      print(e.toString());
+      return left(Faliuer(
+          message: "Error happened +${e.toString()}", stacktrace: StackTrace));
     }
   }
 }

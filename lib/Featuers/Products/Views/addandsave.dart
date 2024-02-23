@@ -1,17 +1,25 @@
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:buffalos/models/Category.dart';
+import 'package:buffalos/models/itemwithnotes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../../apis/Category_Api_Add.dart';
+import '../../../apis/categoriesapi.dart';
 import '../../../apis/fileapi.dart';
 import '../../../apis/subcategory.dart';
 import '../../../apis/updateandadditem.dart';
+import '../../../apis/updateanditemwithNotes.dart';
+import '../../../models/CategoryForAdd/Categorry_For_Add.dart';
 import '../../../models/item.dart';
 import '../../../models/itemwithingred.dart';
 import '../../../models/kitchen.dart';
 import '../../../providers/igrediantsprovider.dart';
+import '../../../providers/noteprovider.dart';
 import '../../../utility/commonwidget/drawer.dart';
 import '../../../utility/dummy.dart';
 import '../../../utility/lineargragr.dart';
@@ -20,6 +28,7 @@ import '../widget/ingrediants.dart';
 import '../widget/notesandingrediant.dart';
 import 'addingred.dart';
 import 'addnote.dart';
+import 'productspage.dart';
 
 class addandsave extends ConsumerStatefulWidget {
   const addandsave({super.key});
@@ -39,6 +48,15 @@ class _addandsaveState extends ConsumerState<addandsave> {
     }
   }
 
+  List<Category> _lissst = [];
+  String pkstring = "";
+  void update(String id, {bool inside = true}) async {
+    _lissst = await ref.read(subcategoryapiProvider).getsubcat(id);
+    if (inside) {
+      setState(() {});
+    }
+  }
+
   late final arrg;
   late final itemdata;
   String? link;
@@ -46,9 +64,83 @@ class _addandsaveState extends ConsumerState<addandsave> {
   String iteamname = "";
   late bool search;
   bool frist = true;
-  void onsave() {
+  void onsave(bool search) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      final intprice = double.tryParse(price.text) ?? 0;
+      if (search) {
+        print(ref.read(ingredianlistProvider));
+        final loo = itemwithingred(
+            it: item(
+                active: true,
+                fkCategoryId: catid,
+                fkPrepareId: fkPrepareId,
+                itemImage2: null,
+                itemImage: link,
+                itemName: fristname.text,
+                itemNameLang2: secondname.text,
+                pkItemId: iteamidint,
+                price: intprice),
+            list: ref.read(ingredianlistProvider));
+        final bestnote = ItemWithNotes(
+          it: item(
+              active: true,
+              fkCategoryId: catid,
+              fkPrepareId: fkPrepareId,
+              itemImage2: null,
+              itemImage: link,
+              itemName: fristname.text,
+              itemNameLang2: secondname.text,
+              pkItemId: iteamidint,
+              price: intprice),
+          note: ref.read(notelistProvider),
+        );
+        // print(listtt);
+
+        await ref.read(addandupdateProvider).updatewithingrediant(loo);
+        await ref.read(addandupdatenoteProvider).updatewithingrediant(bestnote);
+        print(loo.toMap());
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Done")));
+        Navigator.of(context).popUntil(ModalRoute.withName(productPage.path));
+      } else {
+        print(ref.read(ingredianlistProvider));
+        final loo = itemwithingred(
+            it: item(
+                active: true,
+                fkCategoryId: catid,
+                fkPrepareId: fkPrepareId,
+                itemImage2: null,
+                itemImage: link,
+                itemName: fristname.text,
+                itemNameLang2: secondname.text,
+                // pkItemId: iteamidint,
+                price: intprice),
+            list: ref.read(ingredianlistProvider));
+        final id = await ref.read(addandupdateProvider).Addwithingrediant(loo);
+
+        final bestnote = ItemWithNotes(
+          it: item(
+              active: true,
+              fkCategoryId: catid,
+              fkPrepareId: fkPrepareId,
+              itemImage2: null,
+              itemImage: "",
+              itemName: fristname.text,
+              itemNameLang2: secondname.text,
+              pkItemId: id,
+              price: intprice),
+          note: ref.read(notelistProvider),
+        );
+        final listtt = await ref.read(subcategoryapiProvider).getsubcat("1");
+        print(listtt);
+        print(bestnote);
+        await ref.read(addandupdatenoteProvider).updatewithingrediant(bestnote);
+        print(loo.toMap());
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Done")));
+        Navigator.of(context).popUntil(ModalRoute.withName(productPage.path));
+      }
     }
   }
 
@@ -93,9 +185,9 @@ class _addandsaveState extends ConsumerState<addandsave> {
   late TextEditingController subcategory;
   late TextEditingController PerapareAre;
   late TextEditingController price;
-  late int iteamidint;
-  late int fkPrepareId;
-  late int catid;
+  int? iteamidint;
+  int? fkPrepareId;
+  int? catid;
   SuggestionsBoxController mainbox = SuggestionsBoxController();
   SuggestionsBoxController subbox = SuggestionsBoxController();
   SuggestionsBoxController prebbox = SuggestionsBoxController();
@@ -109,6 +201,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
   @override
   Widget build(BuildContext context) {
     bool showCate = arrg["Search"];
+    print(showCate);
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(gradient: linear),
@@ -185,11 +278,11 @@ class _addandsaveState extends ConsumerState<addandsave> {
                         ),
                       if (!showCate)
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: MediaQuery.of(context).size.width * .3,
-                              child: TypeAheadFormField<String?>(
+                              child: TypeAheadFormField(
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -199,6 +292,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                     return null;
                                   }
                                 },
+                                direction: AxisDirection.up,
                                 suggestionsBoxController: mainbox,
                                 hideOnEmpty: true,
                                 hideSuggestionsOnKeyboardHide: true,
@@ -214,15 +308,36 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 ),
                                 suggestionsBoxDecoration:
                                     const SuggestionsBoxDecoration(),
-                                suggestionsCallback: ClassName.getsuggest,
-                                itemBuilder: (context, String? itemData) {
-                                  return ListTile(title: Text(itemData!));
+                                suggestionsCallback: (A) async {
+                                  final mylist1 = await ref
+                                      .watch(CategoriesAddApiprovider)
+                                      .fetchCategoriesAdd();
+                                  return mylist1.where((element) {
+                                    return element.categoryName
+                                        .toLowerCase()
+                                        .contains(A.toLowerCase());
+                                  });
                                 },
-                                onSuggestionSelected: (suggestion) {
-                                  Maincategory.text = suggestion!;
+                                itemBuilder: (context, itemData) {
+                                  return ListTile(
+                                      title: Text(itemData.categoryName));
+                                },
+                                onSuggestionSelected: (suggestion) async {
+                                  Maincategory.text = suggestion.categoryName;
+                                  catid = suggestion.pkCategory;
                                   print(suggestion);
+                                  pkstring = suggestion.pkCategory.toString();
+                                  update(pkstring);
+                                  print(_lissst);
+                                  // _lissst = await ref
+                                  //     .read(subcategoryapiProvider)
+                                  //     .getsubcat(
+                                  //         suggestion.pkCategory.toString());
                                 },
                               ),
+                            ),
+                            SizedBox(
+                              width: 15,
                             ),
                             CircleAvatar(
                               backgroundColor: const Color(0xFF90391E),
@@ -234,41 +349,56 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               ),
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .3,
-                              child: TypeAheadFormField<String?>(
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty ||
-                                      value.trim().isEmpty) {
-                                    return "Please enter Subcategory";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                suggestionsBoxController: subbox,
-                                hideOnEmpty: true,
-                                hideSuggestionsOnKeyboardHide: true,
-                                suggestionsBoxVerticalOffset: 0,
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: const InputDecoration(
-                                      hintText: "Select..",
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      suffixIcon: Icon(
-                                          Icons.keyboard_double_arrow_down)),
-                                  controller: subcategory,
-                                ),
-                                suggestionsBoxDecoration:
-                                    const SuggestionsBoxDecoration(),
-                                suggestionsCallback: ClassName.getsuggest,
-                                itemBuilder: (context, String? itemData) {
-                                  return ListTile(title: Text(itemData!));
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  subcategory.text = suggestion!;
-                                  print(suggestion);
-                                },
-                              ),
+                              width: 10,
+                            ),
+                            (_lissst.isEmpty != true)
+                                ? SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .3,
+                                    child: TypeAheadFormField<Category>(
+                                      direction: AxisDirection.up,
+                                      suggestionsBoxController: subbox,
+                                      hideOnEmpty: true,
+                                      hideSuggestionsOnKeyboardHide: true,
+                                      suggestionsBoxVerticalOffset: 0,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        decoration: const InputDecoration(
+                                            hintText: "Select..",
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            suffixIcon: Icon(Icons
+                                                .keyboard_double_arrow_down)),
+                                        controller: subcategory,
+                                      ),
+                                      suggestionsBoxDecoration:
+                                          const SuggestionsBoxDecoration(),
+                                      suggestionsCallback: (A) {
+                                        if (Maincategory.text.isNotEmpty) {
+                                          return _lissst;
+                                        } else {
+                                          return [];
+                                        }
+                                      },
+                                      itemBuilder: (context, itemData) {
+                                        return ListTile(
+                                            title: Text(itemData.categoryName));
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        subcategory.text =
+                                            suggestion.categoryName;
+                                        catid = suggestion.pkCategory;
+
+                                        print(suggestion.categoryName);
+                                      },
+                                    ),
+                                  )
+                                : Text(
+                                    "No sub Categories",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                            SizedBox(
+                              width: 15,
                             ),
                             CircleAvatar(
                               backgroundColor: const Color(0xFF90391E),
@@ -305,6 +435,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                 }
                               },
                               suggestionsBoxController: prebbox,
+                              direction: AxisDirection.up,
                               hideOnEmpty: true,
                               hideSuggestionsOnKeyboardHide: true,
                               suggestionsBoxVerticalOffset: 0,
@@ -335,6 +466,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               },
                               onSuggestionSelected: (suggestion) {
                                 PerapareAre.text = suggestion!.areaName;
+                                fkPrepareId = suggestion.pkPrepareId;
                                 print(suggestion);
                               },
                             ),
@@ -345,7 +477,8 @@ class _addandsaveState extends ConsumerState<addandsave> {
                               backgroundColor: const Color(0xFF90391E),
                               child: IconButton(
                                 onPressed: () => _showdialolgmain(
-                                    context, PerapareAre, "Perapare Area"),
+                                    context, PerapareAre, "Perapare Area",
+                                    isCategory: false),
                                 icon: const Icon(Icons.add),
                                 color: Colors.white,
                               ),
@@ -368,6 +501,7 @@ class _addandsaveState extends ConsumerState<addandsave> {
                             child: TextFormField(
                                 decoration: const InputDecoration(
                                     hintText: "Enter price...."),
+                                keyboardType: TextInputType.number,
                                 controller: price,
                                 validator: (value) {
                                   if (value == null ||
@@ -379,13 +513,29 @@ class _addandsaveState extends ConsumerState<addandsave> {
                                   }
                                 }),
                           ),
+                          SizedBox(
+                            width: 12,
+                          ),
                           link != null
-                              ? Container(
-                                  width: MediaQuery.of(context).size.width * .5,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white, width: 1)),
-                                  child: Text(link!),
+                              ? Expanded(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white, width: 1)),
+                                        child: Text(link!),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() => link = null);
+                                          },
+                                          icon: Icon(Icons.close))
+                                    ],
+                                  ),
                                 )
                               : ElevatedButton(
                                   onPressed: () {
@@ -448,28 +598,29 @@ class _addandsaveState extends ConsumerState<addandsave> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            final intprice = double.tryParse(price.text) ?? 0;
-                            // onsave();
-
-                            final loo = itemwithingred(
-                                it: item(
-                                    active: true,
-                                    fkCategoryId: catid,
-                                    fkPrepareId: fkPrepareId,
-                                    itemImage2: null,
-                                    itemImage: "",
-                                    itemName: fristname.text,
-                                    itemNameLang2: secondname.text,
-                                    pkItemId: iteamidint,
-                                    price: intprice),
-                                list: ref.read(ingredianlistProvider));
-                            final listtt =
-                                ref.read(subcategoryapiProvider).getsubcat("1");
-                            print(listtt);
-                            await ref
-                                .read(addandupdateProvider)
-                                .updatewithingrediant(loo);
-                            print(loo.toMap());
+                            // final intprice = double.tryParse(price.text) ?? 0;
+                            onsave(showCate);
+                            // print(ref.read(ingredianlistProvider));
+                            // final loo = itemwithingred(
+                            //     it: item(
+                            //         active: true,
+                            //         fkCategoryId: catid,
+                            //         fkPrepareId: fkPrepareId,
+                            //         itemImage2: null,
+                            //         itemImage: "",
+                            //         itemName: fristname.text,
+                            //         itemNameLang2: secondname.text,
+                            //         pkItemId: iteamidint,
+                            //         price: intprice),
+                            //     list: ref.read(ingredianlistProvider));
+                            // final listtt = await ref
+                            //     .read(subcategoryapiProvider)
+                            //     .getsubcat("1");
+                            // print(listtt);
+                            // await ref
+                            //     .read(addandupdateProvider)
+                            //     .updatewithingrediant(loo);
+                            // print(loo.toMap());
                           },
                           style: ButtonStyle(
                             splashFactory: NoSplash.splashFactory,
@@ -499,10 +650,128 @@ class _addandsaveState extends ConsumerState<addandsave> {
       ),
     );
   }
+
+  Future<void> _showdialolgmainsubcategory(
+      BuildContext context,
+      TextEditingController controller,
+      TextEditingController main,
+      TextEditingController secondcontroller) {
+    secondcontroller.clear();
+    main.clear();
+    return showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        // secondcontroller.clear();
+        String categoryid = "";
+        return Consumer(
+          builder: (context, ref, child) => AlertDialog.adaptive(
+            title: const Text(
+              "Add sub category",
+              style: TextStyle(color: Color(0xFF90391E)),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("main category"),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .4,
+                    child: TypeAheadFormField<CategoryForAdd>(
+                      hideOnEmpty: true,
+                      hideSuggestionsOnKeyboardHide: true,
+                      suggestionsBoxVerticalOffset: 0,
+                      textFieldConfiguration: TextFieldConfiguration(
+                        onTap: () => main.clear(),
+                        decoration: const InputDecoration(
+                            hintText: "Select..",
+                            filled: true,
+                            fillColor: Colors.white,
+                            suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
+                        controller: main,
+                      ),
+                      suggestionsBoxDecoration:
+                          const SuggestionsBoxDecoration(),
+                      suggestionsCallback: (A) async {
+                        final mylist1 = await ref
+                            .watch(CategoriesAddApiprovider)
+                            .fetchCategoriesAdd();
+                        return mylist1.where((element) {
+                          return element.categoryName
+                              .toLowerCase()
+                              .contains(A.toLowerCase());
+                        });
+                      },
+                      itemBuilder: (context, CategoryForAdd? itemData) {
+                        return ListTile(title: Text(itemData!.categoryName));
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        main.text = suggestion.categoryName;
+                        categoryid = suggestion.pkCategory.toString();
+                        print(suggestion.categoryName);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("sub category"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: secondcontroller,
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Save'),
+                onPressed: () async {
+                  if (main.text != "") {
+                    List<int> check = await ref
+                        .read(subcategoryapiProvider)
+                        .addSubCategory(secondcontroller.text, categoryid);
+                    if (check[0] == 0 && check[1] == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("error happen")));
+                    } else {
+                      update(check[1].toString());
+                      catid = check[0];
+                    }
+                  }
+
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 Future<void> _showdialolgmain(
-    BuildContext context, TextEditingController controller, String titletext) {
+    BuildContext context, TextEditingController controller, String titletext,
+    {bool isCategory = true}) {
+  controller.clear();
   return showAdaptiveDialog(
     context: context,
     builder: (context) {
@@ -515,15 +784,14 @@ Future<void> _showdialolgmain(
             ),
             content: TextFormField(
               controller: controller,
-              decoration:
-                  const InputDecoration(hintText: "Enter Main Category"),
+              decoration: InputDecoration(hintText: "Enter ${titletext}"),
             ),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Disable'),
+                child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -532,102 +800,23 @@ Future<void> _showdialolgmain(
                 style: TextButton.styleFrom(
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                child: const Text('Enable'),
+                child: const Text('Save'),
                 onPressed: () async {
-                  await ref
-                      .read(Kitchencontrollerprovider)
-                      .addkitchen(controller.text);
+                  if (!isCategory) {
+                    await ref
+                        .read(Kitchencontrollerprovider)
+                        .addkitchen(controller.text);
+                  } else {
+                    ref
+                        .watch(CategoriesApiprovider)
+                        .addCategory(controller.text);
+                  }
                   Navigator.of(context).pop();
                 },
               ),
             ],
           );
         },
-      );
-    },
-  );
-}
-
-Future<void> _showdialolgmainsubcategory(
-    BuildContext context,
-    TextEditingController controller,
-    TextEditingController main,
-    TextEditingController secondcontroller) {
-  return showAdaptiveDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog.adaptive(
-        title: const Text(
-          "Add sub category",
-          style: TextStyle(color: Color(0xFF90391E)),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("main category"),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .4,
-                child: TypeAheadFormField<String?>(
-                  hideOnEmpty: true,
-                  hideSuggestionsOnKeyboardHide: true,
-                  suggestionsBoxVerticalOffset: 0,
-                  textFieldConfiguration: TextFieldConfiguration(
-                    decoration: const InputDecoration(
-                        hintText: "Select..",
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: Icon(Icons.keyboard_double_arrow_down)),
-                    controller: main,
-                  ),
-                  suggestionsBoxDecoration: const SuggestionsBoxDecoration(),
-                  suggestionsCallback: ClassName.getsuggest,
-                  itemBuilder: (context, String? itemData) {
-                    return ListTile(title: Text(itemData!));
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    main.text = suggestion!;
-                    print(suggestion);
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text("sub category"),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: secondcontroller,
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Disable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       );
     },
   );

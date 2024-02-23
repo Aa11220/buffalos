@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:ffi';
 
 class StockStore {
   final String MaterialName;
@@ -38,11 +39,14 @@ class StockStore {
 
   factory StockStore.fromMap(Map<String, dynamic> map) {
     return StockStore(
-      MaterialName: map['MaterialName'] as String,
-      MatType: map['MatType'] as String,
-      Unit: map['unit'] as String,
-      TotalQty: map["qty"] as double,
-    );
+        MaterialName: map['MaterialName'] as String,
+        MatType: map['MatType'] as String,
+        Unit: map["Unit"] as String,
+        TotalQty: map["TotalQty"] != null
+            ? map["TotalQty"] as double
+            : map['Qty'] as double
+        // map['Qty'] != null ? map['Qty'] as double : map['qty'] as double,
+        );
   }
 
   String toJson() => json.encode(toMap());

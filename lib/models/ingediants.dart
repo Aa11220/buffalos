@@ -37,9 +37,9 @@ class ingrediants {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'FK_ItemID': FK_ItemID,
+      'fkItemId': FK_ItemID,
       'ItemName': ItemName,
-      'FK_MaterialID': FK_MaterialID,
+      'fkMaterialId': FK_MaterialID,
       'MaterialName': MaterialName,
       'Qty': Qty,
       'MatType': MatType,
@@ -48,9 +48,9 @@ class ingrediants {
 
   Map<String, dynamic> toMapapi() {
     return <String, dynamic>{
-      'FK_ItemID': FK_ItemID,
+      'fkItemId': FK_ItemID,
       // 'ItemName': ItemName,
-      'FK_MaterialID': FK_MaterialID,
+      'fkMaterialId': FK_MaterialID,
       // 'MaterialName': MaterialName,
       'Qty': Qty,
       // 'MatType': MatType,

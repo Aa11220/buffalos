@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:buffalos/models/ingediants.dart';
 import 'package:buffalos/models/item.dart';
 
+import 'maaterialtosend.dart';
+
 class itemwithingred {
   final item it;
   final List<ingrediants> list;
@@ -30,7 +32,17 @@ class itemwithingred {
         ...it.toMap(),
         "foodstuffsOrSupplies": true,
       },
-      'itemIngrediants': list.map((x) => x.toMapapi()).toList(),
+      'itemingrediants': list.map((x) => x.toMapapi()).toList(),
+    };
+  }
+
+  Map<String, dynamic> toMapAdd() {
+    return <String, dynamic>{
+      "item": {
+        ...it.toMapAdd(),
+        "foodstuffsOrSupplies": true,
+      },
+      'itemingrediants': list.map((x) => x.toMapapi()).toList(),
     };
   }
 

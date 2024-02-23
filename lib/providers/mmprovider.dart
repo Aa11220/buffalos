@@ -9,7 +9,7 @@ class MmProvider extends Notifier<MmModule> {
     return MmModule(mylist: [], total: 0.0);
   }
 
-  void add(int id) {
+  void add({int id = 0}) {
     state.mylist = [
       ...state.mylist,
       mm(
@@ -20,6 +20,17 @@ class MmProvider extends Notifier<MmModule> {
         qty: 0,
       )
     ];
+  }
+
+  void updateid({
+    int? qty,
+    int? index,
+  }) {
+    final main = state.mylist.elementAt(index!);
+    final ss = main.copyWith(fkMaterialId: qty);
+    state.mylist[index] = ss;
+
+    state = state;
   }
 
   void updateqty({

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../providers/igrediantsprovider.dart';
 
 import '../Controller/itemscontroller.dart';
@@ -34,18 +36,23 @@ class _productPageState extends ConsumerState<productPage> {
   SuggestionsBoxController enditcategory = SuggestionsBoxController();
   SuggestionsBoxController endititems = SuggestionsBoxController();
   String itemname = "";
-  void loadlists() async {
-    catlist = await ref.read(CategoriesApiprovider).fetchCategories();
-  }
 
   @override
   void initState() {
-    loadlists();
     super.initState();
   }
 
   @override
+  void deactivate() {
+    category.text = "";
+    items.text = "";
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
+    category.text = "";
+    items.text = "";
     category.dispose();
     items.dispose();
     super.dispose();
@@ -56,6 +63,8 @@ class _productPageState extends ConsumerState<productPage> {
   void onsave() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      mylist1 = [];
+      mylist = [];
       setState(() {
         isloading = true;
       });
@@ -68,6 +77,8 @@ class _productPageState extends ConsumerState<productPage> {
     }
   }
 
+  List<Category> mylist1 = [];
+  List<item> mylist = [];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -117,7 +128,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   if (value == null ||
                                       value.isEmpty ||
                                       value.trim().isEmpty ||
-                                      !catlist.any((element) =>
+                                      !mylist1.any((element) =>
                                           element.categoryName == value)) {
                                     return "Please Select valid item";
                                   } else {
@@ -139,7 +150,7 @@ class _productPageState extends ConsumerState<productPage> {
                                 suggestionsBoxDecoration:
                                     const SuggestionsBoxDecoration(),
                                 suggestionsCallback: (A) async {
-                                  final mylist1 = await ref
+                                  mylist1 = await ref
                                       .watch(CategoriesApiprovider)
                                       .fetchCategories();
                                   return mylist1.where((element) {
@@ -153,6 +164,7 @@ class _productPageState extends ConsumerState<productPage> {
                                       title: Text(itemData!.categoryName));
                                 },
                                 onSuggestionSelected: (suggestion) async {
+                                  // loadlists();
                                   items.text = "";
                                   category.text = suggestion!.categoryName;
                                   _Categorykey =
@@ -195,14 +207,19 @@ class _productPageState extends ConsumerState<productPage> {
                                 suggestionsBoxDecoration:
                                     const SuggestionsBoxDecoration(),
                                 suggestionsCallback: (A) async {
-                                  final mylist = await ref
-                                      .watch(Itemcontrollerprovider)
-                                      .getItems(_Categorykey);
-                                  return mylist.where((element) {
-                                    return element.itemName!
-                                        .toLowerCase()
-                                        .contains(A.toLowerCase());
-                                  });
+                                  if (category.text.isNotEmpty) {
+                                    mylist = await ref
+                                        .watch(Itemcontrollerprovider)
+                                        .getItems(_Categorykey);
+                                    return mylist.where((element) {
+                                      return element.itemName!
+                                          .toLowerCase()
+                                          .contains(A.toLowerCase());
+                                    });
+                                  } else {
+                                    // items.text = "";
+                                    return [];
+                                  }
                                 },
                                 itemBuilder: (context, item? itemData) {
                                   return ListTile(
@@ -217,7 +234,7 @@ class _productPageState extends ConsumerState<productPage> {
                                   if (value == null ||
                                       value.isEmpty ||
                                       value.trim().isEmpty ||
-                                      !_listitem.any((element) =>
+                                      !mylist.any((element) =>
                                           element.itemName == value)) {
                                     return "Please Select valid item";
                                   } else {
@@ -245,6 +262,8 @@ class _productPageState extends ConsumerState<productPage> {
                                           .watch(notelistProvider.notifier)
                                           .deletall();
                                       onsave();
+                                      category.text = "";
+                                      items.text = "";
                                     }, context);
                                   },
                                   child: const Center(
@@ -276,8 +295,10 @@ class _productPageState extends ConsumerState<productPage> {
                                           addandsave.path,
                                           arguments: {
                                             "Search": false,
-                                          });
+                                          }).then((_) => setState(() {}));
                                     }, context);
+                                    category.text = "";
+                                    items.text = "";
                                   },
                                   child: const Center(
                                       child: Text(

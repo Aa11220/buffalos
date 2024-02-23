@@ -30,8 +30,8 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
   bool _Material = false;
   bool _selected = false;
   String name = "";
-  List<StockMaterial> materials = [];
-  List<StockStore> listStores = [];
+  List<StockStore> materials = [];
+  List<StockMaterial> listStores = [];
   void setmaterial() async {
     materials =
         await ref.watch(StockMaterialControllerProvider).getStockStore(id);
@@ -241,11 +241,11 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                                   Expanded(
                                                       child: Text(
                                                           materials[index]
-                                                              .unit)),
+                                                              .Unit)),
                                                   Expanded(
                                                       child: Text(
                                                           materials[index]
-                                                              .qty
+                                                              .TotalQty
                                                               .toString())),
                                                 ],
                                               ),
@@ -342,7 +342,7 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "Type",
+                                            "balance",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18),
@@ -364,10 +364,10 @@ class _StockBalanceState extends ConsumerState<StockBalance> {
                                             children: [
                                               Expanded(
                                                   child: Text(listStores[index]
-                                                      .MaterialName)),
+                                                      .StoreName)),
                                               Expanded(
                                                   child: Text(listStores[index]
-                                                      .TotalQty
+                                                      .Qty
                                                       .toString())),
                                             ],
                                           ),

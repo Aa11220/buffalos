@@ -91,7 +91,9 @@ class _AddRawMaterialScreenState extends ConsumerState<AddRawMaterialScreen> {
                     onSuggestionSelected: (suggestion) {
                       material.text = suggestion.materialName!;
                       ref.read(itemsProvid).add(suggestion);
-                      ref.read(mmProvider.notifier).add(suggestion.fkUnitId!);
+                      ref
+                          .read(mmProvider.notifier)
+                          .add(id: suggestion.fkUnitId!);
                     },
                   ),
                 ),

@@ -1,4 +1,6 @@
-import 'package:buffalos/Featuers/Expensses/View/Expenses.dart';
+import 'Featuers/EndShiftReport/Views/EndShiftScreen.dart';
+import 'Featuers/Expensses/View/Expenses.dart';
+import 'Featuers/purchaes/ViewsM/AddRawMaterialScreen.dart';
 
 import 'Featuers/EndShift/view/End_Shift_Screen.dart';
 import 'Featuers/EndShift/view/Manager_Aproval.dart';
@@ -7,6 +9,10 @@ import 'Featuers/SafeTransfer/View/SafeTransferScree.dart';
 import 'Featuers/Supplier/view/Supplier.dart';
 import 'Featuers/purchaes/Views/AddRawMaterialScreen.dart';
 import 'Featuers/purchaes/Views/PurchaseDataScreen.dart';
+import 'Featuers/purchaes/ViewsM/PurchaseDataScreen.dart';
+import 'Featuers/report/ItemSalesReport/View/ItemSalesReportScreen.dart';
+import 'Featuers/report/MonthlyReport/Views/MonthlyReportScreen.dart';
+import 'Featuers/report/NetProfitInterval/Views/NetProfitIntervelScreen.dart';
 import 'Featuers/report/views/StockBalanceview.dart';
 
 import 'Featuers/Products/Views/addnote.dart';
@@ -33,7 +39,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Chinkin',
       theme: ThemeData(
         inputDecorationTheme:
             const InputDecorationTheme(filled: true, fillColor: Colors.white),
@@ -60,6 +66,12 @@ class MyApp extends StatelessWidget {
         SupplierScreen.path: (context) => const SupplierScreen(),
         SafeTransferScreen.path: (context) => const SafeTransferScreen(),
         '/test': (context) => const done(),
+        MAddMaterialM.path: (context) => MAddMaterialM(),
+        MPurchaseDataScreenM.path: (context) => MPurchaseDataScreenM(),
+        EndShiftReportScreen.path: (context) => EndShiftReportScreen(),
+        NetProfitIntervelScreen.path: (context) => NetProfitIntervelScreen(),
+        ItemsalesReportScreen.path: (context) => ItemsalesReportScreen(),
+        MonthlyReportScreen.path: (context) => MonthlyReportScreen()
       },
     );
   }

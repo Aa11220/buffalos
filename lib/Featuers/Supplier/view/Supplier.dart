@@ -76,7 +76,7 @@ class _SupplierState extends ConsumerState<SupplierScreen> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * .4,
                           child: Commoncolumn(
-                            lable: "ballance",
+                            lable: "balance",
                             keyy: _keybalance,
                             number: true,
                           ),

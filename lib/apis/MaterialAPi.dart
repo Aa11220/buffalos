@@ -19,7 +19,7 @@ class Materialapi {
 
   Future<List<Material>> fetchitems() async {
     List<Material> itemlist = [];
-    final url = Uri.http(baseUrl, "/TblMaterial/getPage", {"pageSize": "2000"});
+    final url = Uri.http(baseUrl, "/TblMaterial/getPage", {"pageSize": "2000", "userQuery": "material=0"});
     try {
       final response = await http.get(
         url,

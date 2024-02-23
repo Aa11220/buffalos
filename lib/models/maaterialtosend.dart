@@ -42,7 +42,7 @@ class materialtosend {
           map['fkComponent'] != null ? map['fkComponent'] as int : null,
       qty: map['qty'] != null ? map['qty'] as double : null,
       mokQty: map['mokQty'] != null ? map['mokQty'] as double : null,
-      id: map['id'] as int,
+      id: map['id'] as int ,
     );
   }
 

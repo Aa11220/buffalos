@@ -16,8 +16,8 @@ class Itemcontroller {
   final kitchenapi kitapi;
 
   Itemcontroller({required this.itemsapi, required this.kitapi});
-  Future<List<item>> getItems(String catid) async {
-    if (catid == "") {
+  Future<List<item>> getItems(String catid, {bool selet_all = false}) async {
+    if (catid == "" && selet_all == false) {
       return [];
     } else {
       final list = await itemsapi.fetchitems(catid);
@@ -29,14 +29,20 @@ class Itemcontroller {
     try {
       final result = await itemsapi.fetchitem(itemid);
       final kitch = await kitapi.fetchitem(result.fkPrepareId.toString());
-      Navigator.of(context).pushNamed(addandsave.path, arguments: {
-        "Search": true,
-        "item": result.toMap(),
-        "Kitchen": kitch.areaName
-      });
+      Navigator.of(context).pushNamed(
+        addandsave.path,
+        arguments: {
+          "Search": true,
+          "item": result.toMap(),
+          "Kitchen": kitch.areaName
+        },
+      );
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Error happended")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error happended"),
+        ),
+      );
     }
   }
 }

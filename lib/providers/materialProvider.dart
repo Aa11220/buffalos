@@ -1,4 +1,4 @@
-import 'package:buffalos/models/Material.dart';
+import '../models/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class itemsProvider extends Notifier<List<Material>> {

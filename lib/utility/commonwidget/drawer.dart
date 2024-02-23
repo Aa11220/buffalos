@@ -1,7 +1,12 @@
+import '../../Featuers/EndShiftReport/Views/EndShiftScreen.dart';
 import '../../Featuers/Expensses/View/Expenses.dart';
 import '../../Featuers/SafeTransfer/View/SafeTransferScree.dart';
 import '../../Featuers/Supplier/view/Supplier.dart';
 import '../../Featuers/purchaes/Views/PurchaseDataScreen.dart';
+import '../../Featuers/purchaes/ViewsM/PurchaseDataScreen.dart';
+import '../../Featuers/report/ItemSalesReport/View/ItemSalesReportScreen.dart';
+import '../../Featuers/report/MonthlyReport/Views/MonthlyReportScreen.dart';
+import '../../Featuers/report/NetProfitInterval/Views/NetProfitIntervelScreen.dart';
 import '../../Featuers/report/views/safeBalanceScreen.dart';
 
 import '../../Featuers/EndShift/view/End_Shift_Screen.dart';
@@ -39,7 +44,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(PurchaseDataScreen.path);
+              Navigator.of(context).pushNamed(MPurchaseDataScreenM.path);
             },
             title: const Text("Purchase Data"),
           ),
@@ -64,6 +69,34 @@ class MyDrawer extends StatelessWidget {
               Navigator.of(context).pushNamed(SafeTransferScreen.path);
             },
             title: const Text("Safe Transfer"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(EndShiftReportScreen.path);
+            },
+            title: const Text("End Shift Report"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(NetProfitIntervelScreen.path);
+            },
+            title: const Text("NetProfit Interval"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(ItemsalesReportScreen.path);
+            },
+            title: const Text("Item sales Report"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(MonthlyReportScreen.path);
+            },
+            title: const Text("Monthly Report"),
           ),
         ],
       ),

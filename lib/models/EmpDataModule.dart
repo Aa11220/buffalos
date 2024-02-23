@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class EmpData {
   final double? Discount;
   final String? StartTime;
@@ -20,6 +22,7 @@ class EmpData {
   final double? TransferedFrom;
   final double? TransferedTo;
   final double? NetCash;
+  final List<Map<String, dynamic>>? companyes;
   EmpData({
     this.Discount,
     this.StartTime,
@@ -39,9 +42,13 @@ class EmpData {
     this.TransferedFrom,
     this.TransferedTo,
     this.NetCash,
+    this.companyes,
   });
 
   EmpData copyWith({
+    double? Discount,
+    String? StartTime,
+    int? Hordercount,
     double? price,
     double? TotalAfterDiscount,
     double? Cashprice,
@@ -57,8 +64,12 @@ class EmpData {
     double? TransferedFrom,
     double? TransferedTo,
     double? NetCash,
+    List<Map<String, dynamic>>? companyes,
   }) {
     return EmpData(
+      Discount: Discount ?? this.Discount,
+      StartTime: StartTime ?? this.StartTime,
+      Hordercount: Hordercount ?? this.Hordercount,
       price: price ?? this.price,
       TotalAfterDiscount: TotalAfterDiscount ?? this.TotalAfterDiscount,
       Cashprice: Cashprice ?? this.Cashprice,
@@ -74,11 +85,15 @@ class EmpData {
       TransferedFrom: TransferedFrom ?? this.TransferedFrom,
       TransferedTo: TransferedTo ?? this.TransferedTo,
       NetCash: NetCash ?? this.NetCash,
+      companyes: companyes ?? this.companyes,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'Discount': Discount,
+      'StartTime': StartTime,
+      'Hordercount': Hordercount,
       'price': price,
       'TotalAfterDiscount': TotalAfterDiscount,
       'Cashprice': Cashprice,
@@ -94,7 +109,66 @@ class EmpData {
       'TransferedFrom': TransferedFrom,
       'TransferedTo': TransferedTo,
       'NetCash': NetCash,
+      'companyes': companyes,
     };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory EmpData.fromJson(String source) =>
+      EmpData.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'EmpData(Discount: $Discount, StartTime: $StartTime, Hordercount: $Hordercount, price: $price, TotalAfterDiscount: $TotalAfterDiscount, Cashprice: $Cashprice, Visaprice: $Visaprice, Componyprice: $Componyprice, ordercount: $ordercount, returncount: $returncount, returnedvalue: $returnedvalue, expensecount: $expensecount, expprice: $expprice, NotPaidDelivery: $NotPaidDelivery, NotPaidTables: $NotPaidTables, TransferedFrom: $TransferedFrom, TransferedTo: $TransferedTo, NetCash: $NetCash, companyes: $companyes)';
+  }
+
+  @override
+  bool operator ==(covariant EmpData other) {
+    if (identical(this, other)) return true;
+
+    return other.Discount == Discount &&
+        other.StartTime == StartTime &&
+        other.Hordercount == Hordercount &&
+        other.price == price &&
+        other.TotalAfterDiscount == TotalAfterDiscount &&
+        other.Cashprice == Cashprice &&
+        other.Visaprice == Visaprice &&
+        other.Componyprice == Componyprice &&
+        other.ordercount == ordercount &&
+        other.returncount == returncount &&
+        other.returnedvalue == returnedvalue &&
+        other.expensecount == expensecount &&
+        other.expprice == expprice &&
+        other.NotPaidDelivery == NotPaidDelivery &&
+        other.NotPaidTables == NotPaidTables &&
+        other.TransferedFrom == TransferedFrom &&
+        other.TransferedTo == TransferedTo &&
+        other.NetCash == NetCash &&
+        listEquals(other.companyes, companyes);
+  }
+
+  @override
+  int get hashCode {
+    return Discount.hashCode ^
+        StartTime.hashCode ^
+        Hordercount.hashCode ^
+        price.hashCode ^
+        TotalAfterDiscount.hashCode ^
+        Cashprice.hashCode ^
+        Visaprice.hashCode ^
+        Componyprice.hashCode ^
+        ordercount.hashCode ^
+        returncount.hashCode ^
+        returnedvalue.hashCode ^
+        expensecount.hashCode ^
+        expprice.hashCode ^
+        NotPaidDelivery.hashCode ^
+        NotPaidTables.hashCode ^
+        TransferedFrom.hashCode ^
+        TransferedTo.hashCode ^
+        NetCash.hashCode ^
+        companyes.hashCode;
   }
 
   factory EmpData.fromMap(Map<String, dynamic> map) {
@@ -153,56 +227,22 @@ class EmpData {
       NetCash: map["Table10"][0]['NetCash'] != null
           ? map["Table10"][0]['NetCash'] as double
           : null,
+      companyes: map['Table12'] != null
+          ? List<Map<String, dynamic>>.from(
+              (map['Table12'] as List).map<Map<String, dynamic>?>(
+                (x) => x,
+              ),
+            )
+          : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory EmpData.fromJson(String source) =>
-      EmpData.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'EmpData(price: $price, TotalAfterDiscount: $TotalAfterDiscount, Cashprice: $Cashprice, Visaprice: $Visaprice, Componyprice: $Componyprice, ordercount: $ordercount, returncount: $returncount, returnedvalue: $returnedvalue, expensecount: $expensecount, expprice: $expprice, NotPaidDelivery: $NotPaidDelivery, NotPaidTables: $NotPaidTables, TransferedFrom: $TransferedFrom, TransferedTo: $TransferedTo, NetCash: $NetCash)';
-  }
-
-  @override
-  bool operator ==(covariant EmpData other) {
-    if (identical(this, other)) return true;
-
-    return other.price == price &&
-        other.TotalAfterDiscount == TotalAfterDiscount &&
-        other.Cashprice == Cashprice &&
-        other.Visaprice == Visaprice &&
-        other.Componyprice == Componyprice &&
-        other.ordercount == ordercount &&
-        other.returncount == returncount &&
-        other.returnedvalue == returnedvalue &&
-        other.expensecount == expensecount &&
-        other.expprice == expprice &&
-        other.NotPaidDelivery == NotPaidDelivery &&
-        other.NotPaidTables == NotPaidTables &&
-        other.TransferedFrom == TransferedFrom &&
-        other.TransferedTo == TransferedTo &&
-        other.NetCash == NetCash;
-  }
-
-  @override
-  int get hashCode {
-    return price.hashCode ^
-        TotalAfterDiscount.hashCode ^
-        Cashprice.hashCode ^
-        Visaprice.hashCode ^
-        Componyprice.hashCode ^
-        ordercount.hashCode ^
-        returncount.hashCode ^
-        returnedvalue.hashCode ^
-        expensecount.hashCode ^
-        expprice.hashCode ^
-        NotPaidDelivery.hashCode ^
-        NotPaidTables.hashCode ^
-        TransferedFrom.hashCode ^
-        TransferedTo.hashCode ^
-        NetCash.hashCode;
+  double Total() {
+    if (this.companyes == null || this.companyes!.isEmpty) {
+      return 0.00;
+    } else {
+      var sum = 0.0;
+      companyes!.forEach((e) => sum += e["CompOrderValue"]);
+      return sum;
+    }
   }
 }

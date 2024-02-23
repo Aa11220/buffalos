@@ -25,9 +25,35 @@ class addandipdate {
           'Authorization': 'Bearer $tokken'
         },
         body: jsonEncode(item.toMap()));
+    print("------------------------Addwithingrediant-------------------------");
+
     print(jsonEncode(item.toMap()));
     print(response.statusCode);
     print(response.body);
-    return 1;
+    print("------------------------Addwithingrediant-------------------------");
+
+    final itemname = jsonDecode(response.body);
+
+    return itemname;
+  }
+
+  Future<int> Addwithingrediant(itemwithingred item) async {
+    final url = Uri.http(baseUrl, "/Admin/SaveUpdateProductWithIngerdiants");
+    final response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "text/plain",
+          'Authorization': 'Bearer $tokken'
+        },
+        body: jsonEncode(item.toMapAdd()));
+    print("------------------------Addwithingrediant-------------------------");
+    print(jsonEncode(item.toMapAdd()));
+    print(response.statusCode);
+    print(response.body);
+    print("------------------------Addwithingrediant-------------------------");
+
+    final itemname = jsonDecode(response.body);
+
+    return itemname;
   }
 }

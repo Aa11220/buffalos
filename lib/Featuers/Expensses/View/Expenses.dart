@@ -74,7 +74,7 @@ class _EpensesScreenState extends ConsumerState<EpensesScreen> {
         }
         _key.currentState?.reset();
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error happen")));
+            .showSnackBar(SnackBar(content: Text("Done")));
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Error happen")));

@@ -61,6 +61,20 @@ class item {
     };
   }
 
+  Map<String, dynamic> toMapAdd() {
+    return <String, dynamic>{
+      // 'pkItemId': pkItemId,
+      'itemName': itemName,
+      'fkCategoryId': fkCategoryId,
+      'price': price,
+      'active': active,
+      'fkPrepareId': fkPrepareId,
+      'itemImage': itemImage,
+      'itemImage2': itemImage2,
+      'itemNameLang2': itemNameLang2,
+    };
+  }
+
   factory item.fromMap(Map<String, dynamic> map) {
     return item(
       pkItemId: map['pkItemId'] != null ? map['pkItemId'] as int : null,
