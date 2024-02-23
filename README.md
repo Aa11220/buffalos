@@ -21,7 +21,11 @@ it give manager ability to track stuff performance , and see generate reports as
   </tr>
   <tr>
     <td> <img src="./Images_for_readme/Product_Page/Screenshot_1708712867.png" alt="drawing" width="200"/></td>
-    <td><strong>Login Screen</strong></td>
+    <td>
+    <li><strong>Product Screen</strong></li>
+    <li>Search</li>
+    <li>Add</li>
+    </td>
     
   </tr>
   <tr>
