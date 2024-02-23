@@ -10,4 +10,4 @@ it give manager ability to track stuff performance , and see generate reports as
 
 | Screen                                                               | Description        |
 | -------------------------------------------------------------------- | ------------------ |
-| ![Login](./Images_for_readme\Login_Screen\Screenshot_1708712835.png) | User login screen. |
+| ![Login](./Images_for_readme/Login_Screen/Screenshot_1708712835.png) | User login screen. |
