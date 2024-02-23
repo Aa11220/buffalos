@@ -11,5 +11,4 @@ it give manager ability to track stuff performance , and see generate reports as
 | Screen | Description |
 | ------ | ----------- |
 
-|
-<img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/>| User login screen. |
+|<img src="./Images_for_readme/Login_Screen/Screenshot_1708712835.png" alt="drawing" width="200"/>| User login screen. |
